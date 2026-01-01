@@ -4,7 +4,7 @@ import { WcagRating, ThemeVariables } from '../types';
  * Converts a hex color string to an RGB object.
  * Supports 3-digit and 6-digit hex codes.
  */
-function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
+export function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex) 
     || /^#?([a-f\d]{1})([a-f\d]{1})([a-f\d]{1})$/i.exec(hex);
   
@@ -36,8 +36,8 @@ export function parseRgbString(rgbString: string): { r: number; g: number; b: nu
  * Calculates the luminance of an RGB color.
  * Formula from WCAG guidelines.
  */
-function getLuminance(r: number, g: number, b: number): number {
-  const a = [r, g, b].map((v) => {
+export function getLuminance(rgb: { r: number; g: number; b: number }): number {
+  const a = [rgb.r, rgb.g, rgb.b].map((v) => {
     v /= 255;
     return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
   });
@@ -51,8 +51,8 @@ export function getContrastRatio(
   rgb1: { r: number; g: number; b: number }, 
   rgb2: { r: number; g: number; b: number }
 ): number {
-  const lum1 = getLuminance(rgb1.r, rgb1.g, rgb1.b);
-  const lum2 = getLuminance(rgb2.r, rgb2.g, rgb2.b);
+  const lum1 = getLuminance(rgb1);
+  const lum2 = getLuminance(rgb2);
   const brightest = Math.max(lum1, lum2);
   const darkest = Math.min(lum1, lum2);
   return (brightest + 0.05) / (darkest + 0.05);
@@ -142,7 +142,11 @@ export function findBestContrastColor(
     theme: ThemeVariables, 
     candidateTokens: string[]
 ): string | null {
-    const bgRgb = parseRgbString(backgroundRgbString);
+    // Parse background color (supports both hex and rgb formats)
+    let bgRgb = parseRgbString(backgroundRgbString);
+    if (!bgRgb && backgroundRgbString.startsWith('#')) {
+        bgRgb = hexToRgb(backgroundRgbString);
+    }
     if (!bgRgb) return null;
 
     let bestToken: string | null = null;

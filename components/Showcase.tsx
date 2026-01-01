@@ -210,7 +210,7 @@ export const Showcase: React.FC<ShowcaseProps> = ({ theme, isDark }) => {
         </div>
 
         {/* --- INPUTS --- */}
-        <div className="card" id="component-form">
+        <div className="card" id="component-input">
             <h2>Inputs</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                  {variants.map(v => (
@@ -226,7 +226,7 @@ export const Showcase: React.FC<ShowcaseProps> = ({ theme, isDark }) => {
             </div>
             
             <h3 className="mt-8 mb-4">Form Controls</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="component-form">
                 {variants.map(v => (
                     <div key={v.name} className="space-y-4 p-4 border border-[var(--border-default)] rounded-lg bg-[var(--bg-inset)]">
                          <h4 className="text-xs font-bold uppercase">{v.name}</h4>
@@ -304,16 +304,16 @@ export const Showcase: React.FC<ShowcaseProps> = ({ theme, isDark }) => {
         </div>
 
         {/* --- TABS & NAV --- */}
-        <div className="card" id="component-nav-menu">
+        <div className="card" id="component-tabs">
             <h2>Tabs</h2>
              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {variants.map(v => (
                     <div key={v.name}>
                         <h3 className="text-xs font-bold uppercase mb-2">{v.name}</h3>
-                        <div className={`tabs-${v.className.toLowerCase() || 'initial'}`} role="tablist">
-                            <button role="tab" aria-selected="true">Account</button>
-                            <button role="tab" aria-selected="false">Settings</button>
-                            <button role="tab" aria-selected="false">Billing</button>
+                        <div className={`tabs ${v.className}`} role="tablist">
+                            <button role="tab" className="tab" aria-selected="true">Account</button>
+                            <button role="tab" className="tab" aria-selected="false">Settings</button>
+                            <button role="tab" className="tab" aria-selected="false">Billing</button>
                         </div>
                     </div>
                 ))}
@@ -379,6 +379,23 @@ export const Showcase: React.FC<ShowcaseProps> = ({ theme, isDark }) => {
             </div>
         </div>
 
+        {/* --- TABS --- */}
+        <div className="card" id="component-tabs">
+            <h2>Tabs</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {variants.map(v => (
+                    <div key={v.name}>
+                        <h3 className="text-xs font-bold uppercase mb-2">{v.name}</h3>
+                        <div className={`tabs ${v.className}`} role="tablist">
+                            <button className="tab active" role="tab">Tab 1</button>
+                            <button className="tab" role="tab">Tab 2</button>
+                            <button className="tab" role="tab">Tab 3</button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+
         {/* --- AVATARS --- */}
         <div className="card" id="component-avatar">
             <h2>Avatars</h2>
@@ -422,7 +439,7 @@ export const Showcase: React.FC<ShowcaseProps> = ({ theme, isDark }) => {
                     </div>
                 </div>
 
-                <div>
+                <div id="component-popover">
                     <h3 className="text-lg font-semibold mb-4">Popovers</h3>
                     <div className="flex gap-4 flex-wrap">
                         {variants.map(v => (

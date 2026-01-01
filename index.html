@@ -217,6 +217,7 @@
         font-weight: 500;
       }
       button:hover:not(:disabled) { background-color: var(--button-default-bg-hover); }
+      button:disabled, button[disabled] { opacity: 0.5; cursor: not-allowed; }
       button.primary { background-color: var(--button-primary-bg); color: var(--button-primary-color); border-color: transparent; }
       button.secondary { background-color: var(--button-secondary-bg); color: var(--button-secondary-color); border-color: transparent; }
       button.accent { background-color: var(--button-accent-bg); color: var(--button-accent-color); border-color: transparent; }
@@ -259,6 +260,7 @@
       button.futuristic.accent { --futuristic-button-border-color: var(--button-accent-bg); --futuristic-button-hover-glow: var(--button-accent-bg); color: var(--button-accent-bg); }
       /* [COMPONENT:button:END] */
 
+      /* [COMPONENT:input:START] */
       /* [COMPONENT:form:START] */
       label { display: block; margin-bottom: 0.375rem; font-size: 0.875rem; font-weight: 500; }
       
@@ -345,6 +347,7 @@
       input[type="range"].futuristic::-webkit-slider-runnable-track { background: color-mix(in srgb, var(--color-primary) 20%, transparent); border: 1px solid var(--color-primary); border-radius: 0; }
       input[type="range"].futuristic::-webkit-slider-thumb { background: var(--bg-default); border: 2px solid var(--color-primary); box-shadow: 0 0 10px var(--futuristic-slider-glow); border-radius: 0; transform: rotate(45deg) scale(0.8); }
       /* [COMPONENT:form:END] */
+      /* [COMPONENT:input:END] */
 
       /* [COMPONENT:card:START] */
       /* INITIAL */
@@ -354,6 +357,7 @@
           background-color: var(--card-bg); 
           color: var(--card-color);
           border: var(--card-border-width) solid var(--card-border-color);
+          box-shadow: var(--card-shadow);
       }
       /* RETRO */
       .card.retro {
@@ -364,7 +368,7 @@
       }
       /* MODERN */
       .card.modern {
-          border-radius: var(--card-border-radius);
+          border-radius: var(--modern-radius);
           background-color: var(--modern-card-bg); color: var(--modern-card-color);
           border: 1px solid var(--modern-card-border-color);
           box-shadow: var(--shadow-sm);
@@ -372,6 +376,7 @@
       /* FUTURISTIC */
       .card.futuristic {
           border-radius: 4px;
+          clip-path: var(--futuristic-clip-path);
           background-color: var(--futuristic-card-bg); color: var(--futuristic-card-color);
           border: 1px solid var(--futuristic-card-border-color);
           backdrop-filter: blur(10px);
@@ -413,11 +418,11 @@
       /* [COMPONENT:badge:END] */
 
       /* [COMPONENT:alert:START] */
-      .alert { padding: var(--alert-padding-y); border-radius: var(--alert-border-radius); display: flex; align-items: center; border: 1px solid transparent; width: 100%; margin-bottom: 0.5rem; }
-      .alert[data-status="info"] { background: var(--alert-info-bg); color: var(--alert-info-color); }
-      .alert[data-status="success"] { background: var(--alert-success-bg); color: var(--alert-success-color); }
-      .alert[data-status="warning"] { background: var(--alert-warning-bg); color: var(--alert-warning-color); }
-      .alert[data-status="danger"] { background: var(--alert-danger-bg); color: var(--alert-danger-color); }
+      .alert { padding: var(--alert-padding-y) var(--alert-padding-x); border-radius: var(--alert-border-radius); display: flex; align-items: center; border: var(--alert-border-width) solid transparent; width: 100%; margin-bottom: 0.5rem; }
+      .alert[data-status="info"], .alert.info { background: var(--alert-info-bg); color: var(--alert-info-color); border-color: var(--alert-info-border); }
+      .alert[data-status="success"], .alert.success { background: var(--alert-success-bg); color: var(--alert-success-color); border-color: var(--alert-success-border); }
+      .alert[data-status="warning"], .alert.warning { background: var(--alert-warning-bg); color: var(--alert-warning-color); border-color: var(--alert-warning-border); }
+      .alert[data-status="danger"], .alert[data-status="error"], .alert.danger, .alert.error { background: var(--alert-error-bg); color: var(--alert-error-color); border-color: var(--alert-error-border); }
       
       .alert.retro { border-radius: 0; border: var(--retro-border-width) solid currentColor; background: var(--retro-alert-bg); box-shadow: 4px 4px 0 var(--retro-shadow-color); }
       .alert.modern { border-radius: var(--border-radius-md); background: var(--modern-alert-bg); border-left: 4px solid currentColor; box-shadow: var(--shadow-sm); }
@@ -451,21 +456,22 @@
       /* [COMPONENT:table:END] */
 
       /* [COMPONENT:tabs:START] */
-      [role="tablist"] { display: flex; gap: 2px; }
-      [role="tab"] { padding: var(--tab-padding-y) var(--tab-padding-x); font-size: var(--tab-font-size); background: transparent; border: none; cursor: pointer; color: var(--tab-inactive-color); transition: all 0.2s; border-bottom: 2px solid transparent; }
-      [role="tab"][aria-selected="true"] { color: var(--tab-active-color); border-bottom-color: var(--tab-active-border-color); font-weight: 500; }
+      .tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--border-default); }
+      .tab { padding: var(--tab-padding-y) var(--tab-padding-x); font-size: var(--tab-font-size); background: transparent; border: none; cursor: pointer; color: var(--tab-inactive-color); transition: all 0.2s; border-bottom: 2px solid transparent; }
+      .tab[aria-selected="true"], .tab.active { color: var(--tab-active-color); border-bottom-color: var(--tab-active-border-color); font-weight: 500; }
+      .tab:hover:not([aria-selected="true"]) { background: var(--bg-subtle); }
       
-      .tabs-retro [role="tablist"] { gap: 4px; }
-      .tabs-retro [role="tab"] { border: var(--retro-border-width) solid transparent; border-bottom: none; }
-      .tabs-retro [role="tab"][aria-selected="true"] { background: var(--retro-tab-active-bg); border-color: currentColor; border-bottom: none; color: var(--bg-default); }
+      .tabs.retro { gap: 4px; border-bottom: none; }
+      .tabs.retro .tab { border: var(--retro-border-width) solid transparent; border-bottom: none; background: var(--bg-default); }
+      .tabs.retro .tab[aria-selected="true"], .tabs.retro .tab.active { background: var(--retro-tab-active-bg); border-color: currentColor; color: var(--bg-default); }
       
-      .tabs-modern [role="tablist"] { background: var(--bg-subtle); padding: 4px; border-radius: 99px; gap: 0; }
-      .tabs-modern [role="tab"] { border-radius: 99px; border: none; padding: 4px 12px; }
-      .tabs-modern [role="tab"][aria-selected="true"] { background: white; shadow: var(--shadow-sm); color: var(--modern-tab-active-color); font-weight: 600; }
+      .tabs.modern { background: var(--bg-subtle); padding: 4px; border-radius: 99px; gap: 0; border-bottom: none; }
+      .tabs.modern .tab { border-radius: 99px; border: none; padding: 8px 16px; }
+      .tabs.modern .tab[aria-selected="true"], .tabs.modern .tab.active { background: white; box-shadow: var(--shadow-sm); color: var(--modern-tab-active-color); font-weight: 600; }
       
-      .tabs-futuristic [role="tablist"] { background: var(--futuristic-tab-bg); padding: 4px; border: 1px solid var(--color-primary); }
-      .tabs-futuristic [role="tab"] { color: var(--text-muted); }
-      .tabs-futuristic [role="tab"][aria-selected="true"] { background: color-mix(in srgb, var(--color-primary) 20%, transparent); box-shadow: 0 0 10px var(--color-primary); color: var(--color-primary); text-shadow: 0 0 5px currentColor; }
+      .tabs.futuristic { background: var(--futuristic-tab-bg); padding: 4px; border: 1px solid var(--color-primary); border-bottom: none; }
+      .tabs.futuristic .tab { color: var(--text-muted); }
+      .tabs.futuristic .tab[aria-selected="true"], .tabs.futuristic .tab.active { background: color-mix(in srgb, var(--color-primary) 20%, transparent); box-shadow: 0 0 10px var(--color-primary); color: var(--color-primary); text-shadow: 0 0 5px currentColor; }
       /* [COMPONENT:tabs:END] */
 
       /* [COMPONENT:pagination:START] */

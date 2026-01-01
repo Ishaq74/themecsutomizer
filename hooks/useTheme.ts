@@ -51,14 +51,19 @@ const DEFAULT_THEME_PRIMITIVES: Partial<ThemeVariables> = {
   '--card-padding': 'var(--space-6)',
   '--card-border-radius': 'var(--border-radius-lg)',
   '--card-border-width': '1px',
+  '--card-shadow': 'var(--shadow-sm)',
 
   '--badge-padding-y': '0.25em',
   '--badge-padding-x': '0.6em',
   '--badge-font-size': '0.75rem',
   '--badge-border-radius': 'var(--border-radius-lg)',
+  '--badge-default-bg': '#e5e7eb',
+  '--badge-default-color': '#374151',
 
   '--alert-padding-y': 'var(--space-4)',
+  '--alert-padding-x': 'var(--space-4)',
   '--alert-border-radius': 'var(--border-radius-md)',
+  '--alert-border-width': '1px',
   
   // Variant Primitives
   '--retro-border-width': '2px',
@@ -86,9 +91,15 @@ const DEFAULT_THEME_PRIMITIVES: Partial<ThemeVariables> = {
   '--avatar-border-width': '2px',
   
   // Tabs
-  '--tab-font-size': '0.875rem',
+  '--tabs-border-color': 'var(--border-default)',
+  '--tab-padding': 'var(--space-2) var(--space-4)',
   '--tab-padding-y': 'var(--space-2)',
   '--tab-padding-x': 'var(--space-4)',
+  '--tab-font-size': '0.875rem',
+  '--tab-bg': 'transparent',
+  '--tab-color': 'var(--text-muted)',
+  '--tab-active-bg': 'transparent',
+  '--tab-hover-bg': 'var(--bg-subtle)',
 
   // Grid
   '--grid-gap': 'var(--space-4)',
@@ -108,6 +119,7 @@ const DEFAULT_THEME_PRIMITIVES: Partial<ThemeVariables> = {
   // Toast
   '--toast-padding': 'var(--space-4)',
   '--toast-border-radius': 'var(--border-radius-md)',
+  '--toast-shadow': 'var(--shadow-lg)',
   '--modern-toast-radius': 'var(--border-radius-lg)',
   
   // Skeleton
@@ -290,10 +302,16 @@ export const SEMANTIC_MAPPINGS = {
     // --- ALERTS ---
     '--alert-info-bg': { light: '#eff6ff', dark: '#172554' },
     '--alert-info-color': { light: '#1e40af', dark: '#bfdbfe' },
+    '--alert-info-border': { light: '#3b82f6', dark: '#3b82f6' },
     '--alert-success-bg': { light: '#f0fdf4', dark: '#052e16' },
     '--alert-success-color': { light: '#166534', dark: '#bbf7d0' },
+    '--alert-success-border': { light: '#16a34a', dark: '#16a34a' },
     '--alert-warning-bg': { light: '#fff7ed', dark: '#431407' },
     '--alert-warning-color': { light: '#9a3412', dark: '#fed7aa' },
+    '--alert-warning-border': { light: '#f97316', dark: '#f97316' },
+    '--alert-error-bg': { light: '#fef2f2', dark: '#450a0a' },
+    '--alert-error-color': { light: '#991b1b', dark: '#fecaca' },
+    '--alert-error-border': { light: '#dc2626', dark: '#dc2626' },
     '--alert-danger-bg': { light: '#fef2f2', dark: '#450a0a' },
     '--alert-danger-color': { light: '#991b1b', dark: '#fecaca' },
     
