@@ -7,6 +7,10 @@ export type ThemeVariables = Record<string, string>;
 
 export type ConfigurableThemeVariable = keyof ThemeVariables;
 
+export type VariantKey = 'initial' | 'retro' | 'modern' | 'futuristic';
+
+export const VARIANT_KEYS: VariantKey[] = ['initial', 'retro', 'modern', 'futuristic'];
+
 export interface SavedPreset {
   name: string;
   theme: Partial<ThemeVariables>;

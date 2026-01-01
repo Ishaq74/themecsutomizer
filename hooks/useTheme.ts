@@ -1,8 +1,110 @@
 import { useState, useEffect, useCallback } from 'react';
-import { type ThemeVariables, type ConfigurableThemeVariable, type SavedPreset } from '../types';
+import * as csstree from 'css-tree';
+import { type ThemeVariables, type ConfigurableThemeVariable, type SavedPreset, type VariantKey, VARIANT_KEYS } from '../types';
 import { getAccessibleTextColor, findBestContrastColor } from '../utils/color';
+import { VARIANT_META } from '../variants';
 
 export type { ThemeVariables };
+
+type VariantRemovalRange = { start: number; end: number };
+
+const buildActiveVariantSet = (variants?: Set<VariantKey>): Set<VariantKey> => {
+  if (variants && variants.size > 0) return variants;
+  return new Set(VARIANT_KEYS);
+};
+
+const getDisabledVariantTokens = (activeVariants: Set<VariantKey>): string[] => {
+  const tokens = new Set<string>();
+  VARIANT_META.forEach(meta => {
+    if (!activeVariants.has(meta.key)) {
+      tokens.add(meta.key.toLowerCase());
+      if (meta.className) tokens.add(meta.className.toLowerCase());
+    }
+  });
+  return Array.from(tokens);
+};
+
+const selectorContainsVariantToken = (selectorNode: csstree.CssNode, tokens: string[]): boolean => {
+  let hasMatch = false;
+  csstree.walk(selectorNode, function walkSelector(node) {
+    if (hasMatch) return;
+    if (node.type === 'ClassSelector') {
+      const className = node.name.toLowerCase();
+      if (tokens.some(token => className.includes(token))) {
+        hasMatch = true;
+        return csstree.walk.skip;
+      }
+    }
+  });
+  return hasMatch;
+};
+
+const trimLeadingWhitespace = (css: string, startIndex: number): number => {
+  let index = startIndex;
+  while (index > 0) {
+    const char = css[index - 1];
+    if (char === ' ' || char === '\t') {
+      index--;
+      continue;
+    }
+    if (char === '\n') {
+      index--;
+      if (index > 0 && css[index - 1] === '\r') index--;
+      continue;
+    }
+    if (char === '\r') {
+      index--;
+      continue;
+    }
+    break;
+  }
+  return index;
+};
+
+const removeCssRanges = (css: string, ranges: VariantRemovalRange[]): string => {
+  if (!ranges.length) return css;
+  const sorted = [...ranges].sort((a, b) => a.start - b.start);
+  let result = '';
+  let lastIndex = 0;
+  sorted.forEach(range => {
+    if (range.start < lastIndex) {
+      lastIndex = Math.max(lastIndex, range.end);
+      return;
+    }
+    result += css.slice(lastIndex, range.start);
+    lastIndex = range.end;
+  });
+  result += css.slice(lastIndex);
+  return result;
+};
+
+const filterCssByVariantSelection = (css: string, activeVariants: Set<VariantKey>): string => {
+  const tokens = getDisabledVariantTokens(activeVariants);
+  if (tokens.length === 0) return css;
+
+  try {
+    const ranges: VariantRemovalRange[] = [];
+    const ast = csstree.parse(css, { positions: true });
+    csstree.walk(ast, {
+      visit: 'Rule',
+      enter(node) {
+        if (node.type !== 'Rule' || !node.loc) return;
+        if (node.prelude.type !== 'SelectorList') return;
+        const selectors = node.prelude.children.toArray();
+        if (!selectors.length) return;
+        const shouldRemove = selectors.every(selector => selectorContainsVariantToken(selector, tokens));
+        if (shouldRemove) {
+          const start = trimLeadingWhitespace(css, node.loc.start.offset);
+          ranges.push({ start, end: node.loc.end.offset });
+        }
+      },
+    });
+    return removeCssRanges(css, ranges);
+  } catch (error) {
+    console.warn('Unable to filter variants from CSS export', error);
+    return css;
+  }
+};
 
 const DEFAULT_THEME_PRIMITIVES: Partial<ThemeVariables> = {
   // Brand
@@ -581,8 +683,9 @@ export const useTheme = (isDark: boolean) => {
 
   const generateJson = useCallback(() => JSON.stringify(theme, null, 2), [theme]);
   
-  const generateCss = useCallback((options: { mode: 'diff' | 'all' | 'full', exclude: Set<string> } = { mode: 'diff', exclude: new Set() }) => {
-    const { mode, exclude } = options;
+  const generateCss = useCallback((options?: { mode?: 'diff' | 'all' | 'full'; exclude?: Set<string>; variants?: Set<VariantKey> }) => {
+    const { mode = 'diff', exclude = new Set<string>(), variants } = options ?? {};
+    const activeVariants = buildActiveVariantSet(variants);
     if (!staticCss && mode === 'full') return '/* Loading... */';
 
     const lightVars: string[] = [];
@@ -613,7 +716,8 @@ export const useTheme = (isDark: boolean) => {
             const regex = new RegExp(`\\/\\* \\[COMPONENT:${id}:START\\] \\*\\/[\\s\S]*?\\/\\* \\[COMPONENT:${id}:END\\] \\*\\/`, 'g');
             outputCss = outputCss.replace(regex, `/* [COMPONENT:${id}] EXCLUDED */`);
         });
-        return outputCss;
+      outputCss = filterCssByVariantSelection(outputCss, activeVariants);
+      return outputCss;
     }
 
     if (lightVars.length > 0) cssString += `:root {\n${lightVars.join('\n')}\n}\n`;

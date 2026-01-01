@@ -3,6 +3,7 @@ import { ThemeCustomizer } from './components/ThemeCustomizer';
 import { Showcase } from './components/Showcase';
 import { useTheme } from './hooks/useTheme';
 import { AccessibilityCheckerProvider } from './hooks/useAccessibilityChecker';
+import { VARIANT_KEYS, VariantKey } from './types';
 
 const App: React.FC = () => {
   // State for theme mode, initialized from system preference
@@ -31,6 +32,27 @@ const App: React.FC = () => {
   
   const toggleTheme = useCallback(() => {
     setIsDark(prev => !prev);
+  }, []);
+
+  const [visibleVariants, setVisibleVariants] = useState<Set<VariantKey>>(() => new Set(VARIANT_KEYS));
+
+  const handleVariantToggle = useCallback((variant: VariantKey, checked: boolean) => {
+    setVisibleVariants(prev => {
+      const next = new Set(prev);
+      if (!checked && next.size === 1 && next.has(variant)) {
+        return prev;
+      }
+      if (checked) {
+        next.add(variant);
+      } else {
+        next.delete(variant);
+      }
+      return next;
+    });
+  }, []);
+
+  const resetVariantFilters = useCallback(() => {
+    setVisibleVariants(new Set(VARIANT_KEYS));
   }, []);
   
   useEffect(() => {
@@ -64,11 +86,14 @@ const App: React.FC = () => {
             deletePreset={deletePreset}
             applyPreset={applyPreset}
             fixContrast={fixContrast}
+            visibleVariants={visibleVariants}
+            onToggleVariant={handleVariantToggle}
+            onSelectAllVariants={resetVariantFilters}
           />
         </aside>
         <main className="flex-1 overflow-y-auto scroll-area">
           <div className="p-4 sm:p-6 md:p-8 lg:p-12 max-w-5xl mx-auto">
-              <Showcase theme={theme} isDark={isDark} />
+              <Showcase theme={theme} isDark={isDark} visibleVariants={visibleVariants} />
           </div>
         </main>
       </div>

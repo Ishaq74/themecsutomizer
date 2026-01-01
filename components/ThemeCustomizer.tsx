@@ -1,15 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { type ThemeVariables, type ThemeConfigCategory, type ThemeConfig, type SavedPreset, type AccessibilityResult, type ThemeConfigSection } from '../types';
+import { type ThemeVariables, type ThemeConfigCategory, type ThemeConfig, type SavedPreset, type AccessibilityResult, type ThemeConfigSection, type VariantKey, VARIANT_KEYS } from '../types';
 import { ExportModal } from './ExportModal';
 import { DEFAULT_THEME, SEMANTIC_MAPPINGS } from '../hooks/useTheme';
 import { useAccessibilityChecker } from '../hooks/useAccessibilityChecker';
 import { InputControl } from './InputControl';
 import { A11yIcon, SunIcon, MoonIcon, CodeIcon, FileCssIcon, ChevronIcon, TrashIcon } from './Icons';
+import { VARIANT_META } from '../variants';
 
 interface ThemeCustomizerProps {
   theme: ThemeVariables;
   updateTheme: (key: keyof ThemeVariables, value: string) => void;
-  generateCss: (options?: { mode: 'diff' | 'all' | 'full', exclude: Set<string> }) => string;
+    generateCss: (options?: { mode: 'diff' | 'all' | 'full', exclude: Set<string>, variants?: Set<VariantKey> }) => string;
   generateJson: () => string;
   resetTheme: () => void;
   hasChanges: boolean;
@@ -20,6 +21,9 @@ interface ThemeCustomizerProps {
   deletePreset: (name: string) => void;
   applyPreset: (theme: Partial<ThemeVariables>) => void;
   fixContrast: (keyToFix: keyof ThemeVariables, backgroundColor: string, candidateTokens: string[]) => void;
+    visibleVariants: Set<VariantKey>;
+    onToggleVariant: (variant: VariantKey, checked: boolean) => void;
+    onSelectAllVariants: () => void;
 }
 
 const semanticColorTokenOptions = [
@@ -90,7 +94,7 @@ const themeConfig: ThemeConfigCategory[] = [
               { id: '--font-family-display', label: 'Heading Font', type: 'text' },
               { id: '--font-family-mono', label: 'Mono Font', type: 'text' },
               { id: '--bg-default', label: 'Body BG', type: 'select', options: paletteColorTokenOptions, purpose: 'color' },
-              { id: '--text-default', label: 'Body Text', type: 'select', options: paletteColorTokenOptions, purpose: 'color' },
+              { id: '--text-default', label: 'Body Text', type: 'select', options: paletteColorTokenOptions, purpose: 'color', contrastFixerKey: 'body-text' },
           ]
       }
     ]
@@ -114,7 +118,7 @@ const themeConfig: ThemeConfigCategory[] = [
           {
               name: "Colors",
               configs: [
-                  { id: '--heading-color', label: 'Headings', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                  { id: '--heading-color', label: 'Headings', type: 'select', options: semanticColorTokenOptions, purpose: 'color', contrastFixerKey: 'h1' },
                   { id: '--link-color', label: 'Links', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
               ]
           }
@@ -198,10 +202,10 @@ const themeConfig: ThemeConfigCategory[] = [
                     name: "Colors",
                     configs: [
                         { id: '--button-default-bg', label: 'Default BG', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
-                        { id: '--button-default-color', label: 'Default Text', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                        { id: '--button-default-color', label: 'Default Text', type: 'select', options: semanticColorTokenOptions, purpose: 'color', contrastFixerKey: 'button-default' },
                         { id: '--button-default-border-color', label: 'Default Border', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
                         { id: '--button-primary-bg', label: 'Primary BG', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
-                        { id: '--button-primary-color', label: 'Primary Text', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                        { id: '--button-primary-color', label: 'Primary Text', type: 'select', options: semanticColorTokenOptions, purpose: 'color', contrastFixerKey: 'button-primary' },
                     ]
                 },
                 { name: "States", configs: [{ id: '--button-default-bg-hover', label: 'Hover BG', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }] }
@@ -573,7 +577,7 @@ const themeConfig: ThemeConfigCategory[] = [
                     name: "Colors",
                     configs: [
                         { id: '--card-bg', label: 'Card BG', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }, 
-                        { id: '--card-color', label: 'Text', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                        { id: '--card-color', label: 'Text', type: 'select', options: semanticColorTokenOptions, purpose: 'color', contrastFixerKey: 'card-body' },
                         { id: '--card-border-color', label: 'Border', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
                     ]
                 },
@@ -1019,12 +1023,14 @@ const SectionRenderer: React.FC<{
     )
 }
 
-export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ theme, updateTheme, generateCss, generateJson, resetTheme, hasChanges, isDark, toggleTheme, customPresets, savePreset, deletePreset, applyPreset, fixContrast }) => {
+export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ theme, updateTheme, generateCss, generateJson, resetTheme, hasChanges, isDark, toggleTheme, customPresets, savePreset, deletePreset, applyPreset, fixContrast, visibleVariants, onToggleVariant, onSelectAllVariants }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [initialModalTab, setInitialModalTab] = useState<'json' | 'css'>('css');
   const { results, isCheckerVisible, toggleCheckerVisibility } = useAccessibilityChecker();
   const [presetMenuOpen, setPresetMenuOpen] = useState(false);
   const presetMenuRef = useRef<HTMLDivElement>(null);
+    const [variantMenuOpen, setVariantMenuOpen] = useState(false);
+    const variantMenuRef = useRef<HTMLDivElement>(null);
   const presetNameInputRef = useRef<HTMLInputElement>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [newPresetName, setNewPresetName] = useState('');
@@ -1035,6 +1041,17 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ theme, updateT
     document.addEventListener('mousedown', handleOutsideClick);
     return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, [presetMenuOpen]);
+
+    useEffect(() => {
+        if (!variantMenuOpen) return;
+        const handleOutsideClick = (event: MouseEvent) => {
+            if (variantMenuRef.current && !variantMenuRef.current.contains(event.target as Node)) {
+                setVariantMenuOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleOutsideClick);
+        return () => document.removeEventListener('mousedown', handleOutsideClick);
+    }, [variantMenuOpen]);
   
   useEffect(() => { if (isSaving && presetNameInputRef.current) presetNameInputRef.current.focus(); }, [isSaving]);
 
@@ -1075,7 +1092,17 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ theme, updateT
   
   return (
     <div className="p-6 h-full flex flex-col">
-      <ExportModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} generateCss={generateCss} generateJson={generateJson} initialTab={initialModalTab} themeConfig={themeConfig} />
+            <ExportModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                generateCss={generateCss}
+                generateJson={generateJson}
+                initialTab={initialModalTab}
+                themeConfig={themeConfig}
+                visibleVariants={visibleVariants}
+                onToggleVariant={onToggleVariant}
+                onSelectAllVariants={onSelectAllVariants}
+            />
       <div className="flex-1 overflow-y-auto pr-2 -mr-2 scroll-area">
         <div className="flex justify-between items-center mb-1">
             <h2 className="text-2xl font-bold">Theme Customizer</h2>
@@ -1094,6 +1121,35 @@ export const ThemeCustomizer: React.FC<ThemeCustomizerProps> = ({ theme, updateT
                             <hr className="my-1" style={{ borderColor: 'var(--border-default)' }}/>
                             {isSaving ? (<li><div className="p-2 space-y-2"><input ref={presetNameInputRef} type="text" placeholder="Preset name..." value={newPresetName} onChange={(e) => setNewPresetName(e.target.value)} className="w-full text-sm p-2 rounded-md" style={{ backgroundColor: 'var(--input-bg)', borderColor: 'var(--input-border-color)', borderWidth: 'var(--border-width)', borderStyle: 'solid', color: 'var(--input-color)' }} onKeyDown={(e) => { if (e.key === 'Enter') handleConfirmSave(); }} /><div className="flex gap-2 justify-end"><button onClick={() => setIsSaving(false)} className="text-sm px-3 py-1 rounded-md" style={{ backgroundColor: 'var(--button-default-bg)', color: 'var(--button-default-color)' }}>Cancel</button><button onClick={handleConfirmSave} className="primary text-sm px-3 py-1">Save</button></div></div></li>) : (<li><button onClick={() => { setPresetMenuOpen(true); setIsSaving(true); setNewPresetName(''); }} className="popover-item w-full">Save Current As Preset...</button></li>)}
                         </ul>
+                    )}
+                </div>
+                <div className="relative" ref={variantMenuRef}>
+                    <button onClick={() => setVariantMenuOpen(p => !p)} className="flex items-center justify-center w-10 h-10 rounded-full transition" style={{ backgroundColor: variantMenuOpen ? 'color-mix(in srgb, var(--color-primary) 15%, transparent)' : 'var(--bg-inset)' }}>🪄</button>
+                    {variantMenuOpen && (
+                        <div className="popover absolute right-0 z-20 mt-2 w-60 p-2 space-y-2">
+                            <div className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--text-muted)' }}>Variants visibles</div>
+                            <p className="text-xs" style={{ color: 'var(--text-muted)' }}>Choisissez quels styles afficher dans la preview et inclure à l'export.</p>
+                            <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                                {VARIANT_META.map(meta => {
+                                    const isLocked = visibleVariants.size === 1 && visibleVariants.has(meta.key);
+                                    return (
+                                        <label key={meta.key} className={`flex items-center gap-2 text-sm ${isLocked ? 'opacity-60' : ''}`}>
+                                            <input
+                                                type="checkbox"
+                                                checked={visibleVariants.has(meta.key)}
+                                                disabled={isLocked}
+                                                onChange={(e) => onToggleVariant(meta.key, e.target.checked)}
+                                            />
+                                            <span>{meta.emoji} {meta.name}</span>
+                                        </label>
+                                    );
+                                })}
+                            </div>
+                            <div className="flex items-center justify-between gap-2 text-xs">
+                                <button className="text-[var(--color-primary)] font-semibold" onClick={() => { onSelectAllVariants(); }}>Tout sélectionner</button>
+                                <span style={{ color: 'var(--text-muted)' }}>Au moins un variant requis.</span>
+                            </div>
+                        </div>
                     )}
                 </div>
                 <button onClick={toggleTheme} className="flex items-center justify-center w-10 h-10 rounded-full transition" style={{ backgroundColor: 'var(--bg-inset)'}}>{isDark ? <SunIcon /> : <MoonIcon />}</button>

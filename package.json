@@ -7,12 +7,14 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "lint": "tsc --noEmit",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "css-tree": "^3.1.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
   },

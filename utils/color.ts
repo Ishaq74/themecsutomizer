@@ -145,7 +145,10 @@ export function findBestContrastColor(
     // Parse background color (supports both hex and rgb formats)
     let bgRgb = parseRgbString(backgroundRgbString);
     if (!bgRgb && backgroundRgbString.startsWith('#')) {
-        bgRgb = hexToRgb(backgroundRgbString);
+      const hexRgb = hexToRgb(backgroundRgbString);
+      if (hexRgb) {
+        bgRgb = { ...hexRgb, a: 1 };
+      }
     }
     if (!bgRgb) return null;
 

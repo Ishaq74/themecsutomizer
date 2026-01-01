@@ -1,18 +1,22 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
-import { ThemeConfigCategory } from '../types';
+import { ThemeConfigCategory, VariantKey } from '../types';
 import { XIcon, ClipboardIcon, CheckIcon } from './Icons';
+import { VARIANT_META } from '../variants';
 
 interface ExportModalProps {
   isOpen: boolean;
   onClose: () => void;
-  generateCss: (options: { mode: 'diff' | 'all' | 'full', exclude: Set<string> }) => string;
+    generateCss: (options: { mode: 'diff' | 'all' | 'full', exclude: Set<string>, variants?: Set<VariantKey> }) => string;
   generateJson: () => string;
   themeConfig: ThemeConfigCategory[];
   initialTab?: 'json' | 'css';
+    visibleVariants: Set<VariantKey>;
+    onToggleVariant: (variant: VariantKey, checked: boolean) => void;
+    onSelectAllVariants: () => void;
 }
 
-export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, generateCss, generateJson, themeConfig, initialTab = 'css' }) => {
+export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, generateCss, generateJson, themeConfig, initialTab = 'css', visibleVariants, onToggleVariant, onSelectAllVariants }) => {
     const [activeTab, setActiveTab] = useState<'json' | 'css'>(initialTab);
     const [exportMode, setExportMode] = useState<'diff' | 'full'>('full');
     const [excludedComponents, setExcludedComponents] = useState<Set<string>>(new Set());
@@ -27,9 +31,8 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, gener
     const componentCategories = useMemo(() => themeConfig.filter(c => c.id), [themeConfig]);
 
     const generatedCss = useMemo(() => {
-        // @ts-ignore - we are only passing diff or full from UI, but the hook accepts all
-        return generateCss({ mode: exportMode, exclude: excludedComponents });
-    }, [generateCss, exportMode, excludedComponents]);
+        return generateCss({ mode: exportMode, exclude: excludedComponents, variants: visibleVariants });
+    }, [generateCss, exportMode, excludedComponents, visibleVariants]);
     
     const generatedJson = useMemo(() => {
         return generateJson();
@@ -112,6 +115,26 @@ export const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, gener
                                                 <span>{cat.name}</span>
                                             </label>
                                         ))}
+                                    </div>
+                                    <div className="mt-6">
+                                        <h4 className="font-bold text-sm mb-2">Variants</h4>
+                                        <div className="space-y-1 text-sm">
+                                            {VARIANT_META.map(meta => {
+                                                const isLocked = visibleVariants.size === 1 && visibleVariants.has(meta.key);
+                                                return (
+                                                    <label key={meta.key} className={`flex items-center gap-2 ${isLocked ? 'opacity-60' : ''}`}>
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={visibleVariants.has(meta.key)}
+                                                            disabled={isLocked}
+                                                            onChange={(e) => onToggleVariant(meta.key, e.target.checked)}
+                                                        />
+                                                        <span>{meta.emoji} {meta.name}</span>
+                                                    </label>
+                                                );
+                                            })}
+                                        </div>
+                                        <button className="mt-3 text-xs font-semibold text-[var(--color-primary)]" onClick={onSelectAllVariants}>Tout sélectionner</button>
                                     </div>
                                 </>
                             )}
