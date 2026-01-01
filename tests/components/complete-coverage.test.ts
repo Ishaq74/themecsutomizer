@@ -29,8 +29,16 @@ describe('Component System - Complete Coverage', () => {
   const colorTypes = ['primary', 'secondary', 'accent'];
 
   const getCustomizerComponentSection = (componentName: string) => {
-    const anchor = `scrollToId: 'component-${componentName}'`;
-    const anchorIndex = customizerContent.indexOf(anchor);
+    const toDisplayName = (value: string) =>
+      value
+        .split(/[-_]/)
+        .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+        .join(' ');
+
+    const idMatch = new RegExp(`id:\\s*['\"]${componentName}['\"]`, 'i').exec(customizerContent);
+    const scrollMatch = new RegExp(`scrollToId:\\s*['\"]component-${componentName}['\"]`, 'i').exec(customizerContent);
+    const nameMatch = new RegExp(`name:\\s*['\"]${toDisplayName(componentName)}['\"]`, 'i').exec(customizerContent);
+    const anchorIndex = idMatch?.index ?? scrollMatch?.index ?? nameMatch?.index ?? -1;
     if (anchorIndex === -1) return '';
 
     let start = anchorIndex;

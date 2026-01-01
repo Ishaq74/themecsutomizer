@@ -927,10 +927,25 @@ const themeConfig: ThemeConfigCategory[] = [
           },
           {
               name: "Skeleton",
-              configs: [
-                  { id: '--skeleton-bg', label: 'Background', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
-                  { id: '--skeleton-border-radius', label: 'Border Radius', type: 'text' },
-                  { id: '--skeleton-shimmer-color', label: 'Shimmer Color', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+              subsections: [
+                  {
+                      name: "Initial",
+                      subsections: [
+                          {
+                              name: "Structure",
+                              configs: [
+                                  { id: '--skeleton-border-radius', label: 'Border Radius', type: 'text' }
+                              ]
+                          },
+                          {
+                              name: "Colors",
+                              configs: [
+                                  { id: '--skeleton-bg', label: 'Background', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                                  { id: '--skeleton-shimmer-color', label: 'Shimmer Color', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+                              ]
+                          }
+                      ]
+                  }
               ]
           },
           {

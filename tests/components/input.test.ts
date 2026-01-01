@@ -8,8 +8,15 @@ describe('Input Component - Exhaustive Tests', () => {
   let showcaseContent: string;
   let indexHtmlContent: string;
   const getCustomizerSection = (component: string) => {
-    const anchor = `scrollToId: 'component-${component.toLowerCase()}'`;
-    const anchorIndex = customizerContent.indexOf(anchor);
+    const normalized = component.toLowerCase();
+    const displayName = normalized
+      .split(/[-_]/)
+      .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(' ');
+    const idMatch = new RegExp(`id:\\s*['\"]${normalized}['\"]`, 'i').exec(customizerContent);
+    const scrollMatch = new RegExp(`scrollToId:\\s*['\"]component-${normalized}['\"]`, 'i').exec(customizerContent);
+    const nameMatch = new RegExp(`name:\\s*['\"]${displayName}['\"]`, 'i').exec(customizerContent);
+    const anchorIndex = idMatch?.index ?? scrollMatch?.index ?? nameMatch?.index ?? -1;
     if (anchorIndex === -1) return '';
 
     let start = anchorIndex;
