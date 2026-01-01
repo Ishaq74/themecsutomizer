@@ -167,16 +167,16 @@ export const Showcase: React.FC<ShowcaseProps> = ({ theme, isDark }) => {
                 <h3 className="text-lg font-semibold mb-4">Text Links - All Variants</h3>
                 <div className="space-y-4">
                     <div>
-                        <strong>Default:</strong> This is a paragraph with <a href="#">a standard link</a> inside it.
+                        <strong>Initial:</strong> This is a paragraph with <a href="#" className="link">an initial link</a> inside it.
                     </div>
                     <div>
-                        <strong>Retro:</strong> This is a paragraph with <a href="#" className="link-retro">a retro link</a> inside it.
+                        <strong>Retro:</strong> This is a paragraph with <a href="#" className="link retro">a retro link</a> inside it.
                     </div>
                     <div>
-                        <strong>Modern:</strong> This is a paragraph with <a href="#" className="link-modern">a modern link</a> inside it.
+                        <strong>Modern:</strong> This is a paragraph with <a href="#" className="link modern">a modern link</a> inside it.
                     </div>
                     <div>
-                        <strong>Futuristic:</strong> This is a paragraph with <a href="#" className="link-futuristic">a futuristic link</a> inside it.
+                        <strong>Futuristic:</strong> This is a paragraph with <a href="#" className="link futuristic">a futuristic link</a> inside it.
                     </div>
                 </div>
             </div>

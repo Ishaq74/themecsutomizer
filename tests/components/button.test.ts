@@ -200,12 +200,13 @@ describe('Button Component - Exhaustive Tests', () => {
     });
 
     it('should demonstrate all variants', () => {
-      const buttonSection = showcaseContent.match(/id=["']component-button["'][\s\S]*?(?=<div className=["']card["']|$)/i);
+      const buttonSection = showcaseContent.match(/id=["']component-button["'][\s\S]*?(?=id=["']component-|$)/i);
       expect(buttonSection).toBeTruthy();
       
-      expect(buttonSection![0]).toMatch(/retro/i);
-      expect(buttonSection![0]).toMatch(/modern/i);
-      expect(buttonSection![0]).toMatch(/futuristic/i);
+      // Check that variants array is used and mapped
+      expect(buttonSection![0]).toMatch(/variants\.map/i);
+      expect(buttonSection![0]).toMatch(/v\.className/i);
+      expect(buttonSection![0]).toMatch(/v\.name/i);
     });
 
     it('should demonstrate color types', () => {

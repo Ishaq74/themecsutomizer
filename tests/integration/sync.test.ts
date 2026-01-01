@@ -7,11 +7,6 @@ describe('Theme Synchronization', () => {
   const customizerPath = path.join(process.cwd(), 'components/ThemeCustomizer.tsx');
   const indexHtmlPath = path.join(process.cwd(), 'index.html');
 
-
-  function beforeAll(arg0: () => void) {
-      throw new Error('Function not implemented.');
-  }
-
   let useThemeContent: string;
   let customizerContent: string;
   let indexHtmlContent: string;

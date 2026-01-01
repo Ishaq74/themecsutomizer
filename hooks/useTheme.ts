@@ -47,6 +47,12 @@ const DEFAULT_THEME_PRIMITIVES: Partial<ThemeVariables> = {
   '--input-padding-x': 'var(--space-3)',
   '--input-border-width': '1px',
   '--input-border-radius': 'var(--border-radius-md)',
+  '--input-font-size': '0.875rem',
+  '--input-bg': 'var(--bg-subtle)',
+  '--input-border-color': 'var(--border-default)',
+  '--input-text-color': 'var(--text-default)',
+  '--input-placeholder-color': 'var(--text-muted)',
+  '--input-border-color-focus': 'var(--color-primary)',
   
   '--card-padding': 'var(--space-6)',
   '--card-border-radius': 'var(--border-radius-lg)',
@@ -84,6 +90,12 @@ const DEFAULT_THEME_PRIMITIVES: Partial<ThemeVariables> = {
   // Table
   '--table-padding-y': 'var(--space-3)',
   '--table-padding-x': 'var(--space-4)',
+  '--table-cell-padding': 'var(--space-3) var(--space-4)',
+  '--table-border-color': 'var(--border-default)',
+  '--table-row-bg': 'var(--bg-default)',
+  '--table-row-hover-bg': 'var(--bg-subtle)',
+  '--table-header-bg': 'var(--bg-subtle)',
+  '--table-header-color': 'var(--text-default)',
   
   // Avatar
   '--avatar-size': '2.5rem',
@@ -108,6 +120,7 @@ const DEFAULT_THEME_PRIMITIVES: Partial<ThemeVariables> = {
   // Popover
   '--popover-padding': 'var(--space-4)',
   '--popover-border-radius': 'var(--border-radius-md)',
+  '--popover-border-width': '1px',
   '--popover-shadow': 'var(--shadow-lg)',
   
   // Tooltip
@@ -128,13 +141,26 @@ const DEFAULT_THEME_PRIMITIVES: Partial<ThemeVariables> = {
   // Pagination
   '--pagination-item-size': '2rem',
   '--pagination-item-border-radius': 'var(--border-radius-md)',
+  '--pagination-item-bg': 'var(--bg-default)',
+  '--pagination-item-color': 'var(--text-default)',
+  '--pagination-item-border': 'var(--border-default)',
+  '--pagination-item-hover-bg': 'var(--bg-subtle)',
+  '--pagination-active-bg': 'var(--color-primary)',
+  '--pagination-active-color': '#ffffff',
   
   // Links - Text Link Variants (initial, retro, modern, futuristic)
   // Initial
-  '--link-text-decoration': 'underline',
-  '--link-text-underline-offset': '2px',
+  '--link-font-size': '1rem',
   '--link-font-weight': '400',
+  '--link-text-decoration': 'underline',
+  '--link-text-decoration-thickness': '1px',
+  '--link-text-decoration-style': 'solid',
+  '--link-text-underline-offset': '2px',
   '--link-transition': 'text-decoration-color 0.2s',
+  '--link-color': 'var(--color-primary)',
+  '--link-color-hover': 'var(--color-primary)',
+  '--link-color-active': 'var(--color-primary)',
+  '--link-color-visited': '#7c3aed',
   
   // Retro
   '--retro-link-border-width': '2px',
@@ -156,6 +182,9 @@ const DEFAULT_THEME_PRIMITIVES: Partial<ThemeVariables> = {
   '--link-button-border-radius': 'var(--border-radius-md)',
   '--link-button-font-size': '0.875rem',
   '--link-button-border-width': '1px',
+  '--link-button-primary-bg': 'var(--color-primary)',
+  '--link-button-secondary-bg': 'var(--color-secondary)',
+  '--link-button-accent-bg': 'var(--color-accent)',
   
   // Link Buttons - Retro
   '--retro-link-button-border-width': 'var(--retro-border-width)',
@@ -258,15 +287,18 @@ export const SEMANTIC_MAPPINGS = {
     
     '--retro-input-bg': { light: 'white', dark: 'black' },
     '--retro-input-color': { light: 'black', dark: 'white' },
+    '--retro-input-text-color': { light: 'black', dark: 'white' },
     '--retro-input-border-color': { light: 'black', dark: 'white' },
     '--retro-input-focus-bg': { light: '#f0f0f0', dark: '#222' },
     
     '--modern-input-bg': { light: '#f9fafb', dark: '#1e293b' },
     '--modern-input-color': { light: 'var(--text-default)', dark: 'var(--text-default)' },
+    '--modern-input-text-color': { light: 'var(--text-default)', dark: 'var(--text-default)' },
     '--modern-input-border-color': { light: 'var(--border-default)', dark: 'var(--border-strong)' },
     
     '--futuristic-input-bg': { light: 'rgba(0,0,0,0.1)', dark: 'rgba(255,255,255,0.05)' },
     '--futuristic-input-color': { light: 'var(--color-primary)', dark: 'var(--color-primary)' },
+    '--futuristic-input-text-color': { light: 'var(--color-primary)', dark: 'var(--color-primary)' },
     '--futuristic-input-border-color': { light: 'var(--color-primary)', dark: 'var(--color-primary)' },
     '--futuristic-input-focus-glow': { light: 'var(--color-primary)', dark: 'var(--color-primary)' },
 

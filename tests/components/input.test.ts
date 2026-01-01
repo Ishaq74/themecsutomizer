@@ -26,7 +26,7 @@ describe('Input Component - Exhaustive Tests', () => {
       '--input-border-color',
       '--input-text-color',
       '--input-placeholder-color',
-      '--input-focus-border-color',
+      '--input-border-color-focus',
     ];
 
     inputVars.forEach(varName => {
@@ -146,7 +146,7 @@ describe('Input Component - Exhaustive Tests', () => {
     });
 
     it('should have States controls', () => {
-      expect(customizerContent).toMatch(/id:\s*['"]--input-focus-border-color['"]/);
+      expect(customizerContent).toMatch(/id:\s*['"]--input-border-color-focus['"]/);
     });
 
     ['Retro', 'Modern', 'Futuristic'].forEach(variant => {
@@ -215,7 +215,7 @@ describe('Input Component - Exhaustive Tests', () => {
 
   describe('Variable Integration', () => {
     it('should have scrollToId for navigation', () => {
-      const inputConfig = customizerContent.match(/name:\s*["']Input["'][\s\S]*?scrollToId/i);
+      const inputConfig = customizerContent.match(/name:\s*["']Input["'][\s\S]*?scrollToId:\s*['"][^'"]+['"]/i);
       expect(inputConfig).toBeTruthy();
       expect(inputConfig![0]).toContain('component-input');
     });

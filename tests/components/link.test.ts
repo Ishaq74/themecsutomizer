@@ -60,7 +60,7 @@ describe('Link Component - Exhaustive Tests', () => {
     });
 
     it('should have "Link Styles" category', () => {
-      const linkSection = customizerContent.match(/name:\s*["']Link["'][\s\S]*?(?=name:\s*["'][A-Z])/i);
+      const linkSection = customizerContent.match(/name:\s*["']Link["'][\s\S]*?(?=\/\/ ----|$)/i);
       expect(linkSection![0]).toMatch(/name:\s*["']Link Styles["']/);
     });
 

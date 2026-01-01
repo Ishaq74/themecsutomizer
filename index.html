@@ -67,39 +67,60 @@
       p { margin-bottom: var(--space-4); }
       a { 
         color: var(--link-color); 
+        font-size: var(--link-font-size);
+        font-weight: var(--link-font-weight);
         text-decoration: var(--link-text-decoration); 
+        text-decoration-thickness: var(--link-text-decoration-thickness);
+        text-decoration-style: var(--link-text-decoration-style);
         text-decoration-color: var(--link-text-decoration-color); 
         text-underline-offset: var(--link-text-underline-offset);
-        font-weight: var(--link-font-weight);
         transition: var(--link-transition); 
       }
-      a:hover { color: var(--link-hover-color); text-decoration-color: currentColor; }
-      a:active { color: var(--link-active-color); }
-      a:visited { color: var(--link-visited-color); }
+      a:hover { color: var(--link-color-hover); text-decoration-color: currentColor; }
+      a:active { color: var(--link-color-active); }
+      a:visited { color: var(--link-color-visited); }
       /* [BASE:ELEMENTS:END] */
       
       /* [COMPONENT:link:START] */
       /* LINK STYLES - Normal text links with variants */
-      a.link-retro {
+      /* Initial variant */
+      a.link {
+        color: var(--link-color); 
+        font-size: var(--link-font-size);
+        font-weight: var(--link-font-weight);
+        text-decoration: var(--link-text-decoration); 
+        text-decoration-thickness: var(--link-text-decoration-thickness);
+        text-decoration-style: var(--link-text-decoration-style);
+        text-decoration-color: var(--link-text-decoration-color); 
+        text-underline-offset: var(--link-text-underline-offset);
+        transition: var(--link-transition); 
+      }
+      a.link:hover { color: var(--link-color-hover); text-decoration-color: currentColor; }
+      a.link:active { color: var(--link-color-active); }
+      a.link:visited { color: var(--link-color-visited); }
+      
+      /* Retro variant */
+      a.link.retro {
         color: var(--retro-link-color);
         text-decoration: none;
         border-bottom: var(--retro-link-border-width) solid var(--retro-link-border-color);
         font-weight: var(--retro-link-font-weight);
         transition: var(--retro-link-transition);
       }
-      a.link-retro:hover {
+      a.link.retro:hover {
         color: var(--retro-link-hover-color);
         transform: translate(var(--retro-link-shadow-offset), calc(-1 * var(--retro-link-shadow-offset)));
         box-shadow: var(--retro-link-shadow-offset) var(--retro-link-shadow-offset) 0 var(--retro-link-shadow-color);
       }
       
-      a.link-modern {
+      /* Modern variant */
+      a.link.modern {
         color: var(--modern-link-color);
         text-decoration: none;
         position: relative;
         padding-bottom: 2px;
       }
-      a.link-modern::after {
+      a.link.modern::after {
         content: '';
         position: absolute;
         bottom: 0;
@@ -109,14 +130,15 @@
         background: var(--modern-link-underline-color);
         transition: width var(--modern-link-transition) ease;
       }
-      a.link-modern:hover {
+      a.link.modern:hover {
         color: var(--modern-link-hover-color);
       }
-      a.link-modern:hover::after {
+      a.link.modern:hover::after {
         width: 100%;
       }
       
-      a.link-futuristic {
+      /* Futuristic variant */
+      a.link.futuristic {
         color: var(--futuristic-link-color);
         text-decoration: none;
         position: relative;
@@ -124,17 +146,17 @@
         letter-spacing: var(--futuristic-link-letter-spacing);
         font-size: var(--futuristic-link-font-size);
       }
-      a.link-futuristic:hover {
+      a.link.futuristic:hover {
         color: var(--futuristic-link-hover-color);
         text-shadow: 0 0 8px var(--futuristic-link-glow);
       }
-      a.link-futuristic::before {
+      a.link.futuristic::before {
         content: '>';
         margin-right: 0.25em;
         opacity: 0;
         transition: opacity 0.2s, margin-right 0.2s;
       }
-      a.link-futuristic:hover::before {
+      a.link.futuristic:hover::before {
         opacity: 1;
         margin-right: 0.5em;
       }
@@ -265,7 +287,7 @@
       label { display: block; margin-bottom: 0.375rem; font-size: 0.875rem; font-weight: 500; }
       
       /* INITIAL INPUT */
-      input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select {
+      input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea {
           width: 100%;
           padding: var(--input-padding-y) var(--input-padding-x);
           border: var(--input-border-width) solid var(--input-border-color);
@@ -273,33 +295,33 @@
           background-color: var(--input-bg);
           color: var(--input-color);
       }
-      input:focus, select:focus { outline: none; border-color: var(--input-border-color-focus); ring: 2px solid var(--input-border-color-focus); }
+      input:focus, select:focus, textarea:focus { outline: none; border-color: var(--input-border-color-focus); ring: 2px solid var(--input-border-color-focus); }
 
       /* RETRO INPUT */
-      input.retro:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select.retro {
+      input.retro:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select.retro, textarea.retro {
           border-radius: 0;
           border: var(--retro-border-width) solid var(--retro-input-border-color);
           background-color: var(--retro-input-bg); color: var(--retro-input-color);
           box-shadow: 2px 2px 0 var(--retro-shadow-color);
       }
-      input.retro:focus, select.retro:focus { background-color: var(--retro-input-focus-bg); outline: none; }
+      input.retro:focus, select.retro:focus, textarea.retro:focus { background-color: var(--retro-input-focus-bg); outline: none; }
 
       /* MODERN INPUT */
-      input.modern:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select.modern {
+      input.modern:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select.modern, textarea.modern {
           border-radius: var(--input-border-radius);
           border: 1px solid var(--modern-input-border-color);
           background-color: var(--modern-input-bg); color: var(--modern-input-color);
           box-shadow: var(--shadow-sm);
       }
-      input.modern:focus, select.modern:focus { border-color: var(--input-border-color-focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--input-border-color-focus) 20%, transparent); }
+      input.modern:focus, select.modern:focus, textarea.modern:focus { border-color: var(--input-border-color-focus); box-shadow: 0 0 0 3px color-mix(in srgb, var(--input-border-color-focus) 20%, transparent); }
 
       /* FUTURISTIC INPUT */
-      input.futuristic:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select.futuristic {
+      input.futuristic:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select.futuristic, textarea.futuristic {
           border-radius: 0; clip-path: var(--futuristic-clip-path);
           border: 1px solid var(--futuristic-input-border-color);
           background-color: var(--futuristic-input-bg); color: var(--futuristic-input-color);
       }
-      input.futuristic:focus, select.futuristic:focus {
+      input.futuristic:focus, select.futuristic:focus, textarea.futuristic:focus {
           box-shadow: 0 0 10px var(--futuristic-input-focus-glow);
           border-color: var(--futuristic-input-focus-glow);
           background-color: color-mix(in srgb, var(--futuristic-input-focus-glow) 10%, transparent);
@@ -440,8 +462,11 @@
       /* [COMPONENT:alert:END] */
 
       /* [COMPONENT:table:START] */
-      table { width: 100%; border-collapse: collapse; }
-      th, td { padding: var(--table-padding-y) var(--table-padding-x); text-align: left; border-bottom: 1px solid var(--border-default); }
+      table { width: 100%; border-collapse: collapse; border: 1px solid var(--table-border-color); }
+      thead { background: var(--table-header-bg); }
+      tbody tr { background: var(--table-row-bg); }
+      tbody tr:hover { background: var(--table-row-hover-bg); }
+      th, td { padding: var(--table-cell-padding); text-align: left; border: 1px solid var(--table-border-color); }
       th { background: var(--table-header-bg); color: var(--table-header-color); font-weight: 600; }
       
       table.retro th { background: var(--retro-table-header-bg); color: var(--retro-table-header-color); border: var(--retro-border-width) solid var(--retro-table-border-color); }

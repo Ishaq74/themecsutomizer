@@ -254,8 +254,8 @@ const themeConfig: ThemeConfigCategory[] = [
   // --- INPUT COMPONENT ---
   {
       name: "Input",
-      id: 'form',
-      scrollToId: 'component-form',
+      id: 'input',
+      scrollToId: 'component-input',
       subsections: [
           {
               name: "Initial",
