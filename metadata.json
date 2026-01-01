@@ -1,0 +1,5 @@
+{
+  "name": "ETAPROPRE V3",
+  "description": "A powerful UI library built with a CSS-variable-driven design system. This application allows you to visually customize theme properties like colors, fonts, and spacing, and then extract the generated CSS. All standard HTML elements are beautifully styled by default, with optional classes for primary, secondary, and accent variants. Features live light/dark mode switching and automatic color contrast checking for accessibility.",
+  "requestFramePermissions": []
+}
