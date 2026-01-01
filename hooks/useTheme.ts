@@ -42,6 +42,9 @@ const DEFAULT_THEME_PRIMITIVES: Partial<ThemeVariables> = {
   '--button-border-radius': 'var(--border-radius-md)',
   '--button-font-size': '0.875rem',
   '--button-border-width': '1px',
+  '--button-bg': 'var(--button-default-bg)',
+  '--button-color': 'var(--button-default-color)',
+  '--button-border-color': 'var(--button-default-border-color)',
   
   '--input-padding-y': 'var(--space-2)',
   '--input-padding-x': 'var(--space-3)',
@@ -65,11 +68,17 @@ const DEFAULT_THEME_PRIMITIVES: Partial<ThemeVariables> = {
   '--badge-border-radius': 'var(--border-radius-lg)',
   '--badge-default-bg': '#e5e7eb',
   '--badge-default-color': '#374151',
+  '--badge-bg': 'var(--badge-default-bg)',
+  '--badge-color': 'var(--badge-default-color)',
+  '--badge-border-color': 'transparent',
 
   '--alert-padding-y': 'var(--space-4)',
   '--alert-padding-x': 'var(--space-4)',
   '--alert-border-radius': 'var(--border-radius-md)',
   '--alert-border-width': '1px',
+  '--alert-bg': 'var(--alert-info-bg)',
+  '--alert-color': 'var(--alert-info-color)',
+  '--alert-border-color': 'var(--alert-info-border)',
   
   // Variant Primitives
   '--retro-border-width': '2px',
@@ -96,6 +105,8 @@ const DEFAULT_THEME_PRIMITIVES: Partial<ThemeVariables> = {
   '--table-row-hover-bg': 'var(--bg-subtle)',
   '--table-header-bg': 'var(--bg-subtle)',
   '--table-header-color': 'var(--text-default)',
+  '--link-bg': 'transparent',
+  '--link-border-color': 'transparent',
   
   // Avatar
   '--avatar-size': '2.5rem',

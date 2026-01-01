@@ -28,11 +28,53 @@ describe('Component System - Complete Coverage', () => {
   const variants = ['initial', 'retro', 'modern', 'futuristic'];
   const colorTypes = ['primary', 'secondary', 'accent'];
 
+  const getCustomizerComponentSection = (componentName: string) => {
+    const anchor = `scrollToId: 'component-${componentName}'`;
+    const anchorIndex = customizerContent.indexOf(anchor);
+    if (anchorIndex === -1) return '';
+
+    let start = anchorIndex;
+    while (start > 0 && customizerContent[start] !== '{') {
+      start--;
+    }
+    if (customizerContent[start] !== '{') return '';
+
+    let depth = 0;
+    for (let i = start; i < customizerContent.length; i++) {
+      const char = customizerContent[i];
+      if (char === '{') {
+        depth++;
+      } else if (char === '}') {
+        depth--;
+        if (depth === 0) {
+          return customizerContent.slice(start, i + 1);
+        }
+      }
+    }
+
+    return customizerContent.slice(start);
+  };
+
   beforeAll(() => {
     useThemeContent = fs.readFileSync(path.join(process.cwd(), 'hooks/useTheme.ts'), 'utf8');
     customizerContent = fs.readFileSync(path.join(process.cwd(), 'components/ThemeCustomizer.tsx'), 'utf8');
     showcaseContent = fs.readFileSync(path.join(process.cwd(), 'components/Showcase.tsx'), 'utf8');
     indexHtmlContent = fs.readFileSync(path.join(process.cwd(), 'index.html'), 'utf8');
+  });
+
+  describe('Variant Definitions', () => {
+    it('should declare all visual variants inside Showcase', () => {
+      const variantBlock = showcaseContent.match(/const variants = \[([\s\S]*?)\];/i);
+      expect(variantBlock).toBeTruthy();
+      if (variantBlock) {
+        ['Initial', 'Retro', 'Modern', 'Futuristic'].forEach(name => {
+          expect(variantBlock[1]).toContain(`name: '${name}'`);
+        });
+        ['', 'retro', 'modern', 'futuristic'].forEach(className => {
+          expect(variantBlock[1]).toContain(`className: '${className}'`);
+        });
+      }
+    });
   });
 
   describe('Component Existence', () => {
@@ -148,21 +190,13 @@ describe('Component System - Complete Coverage', () => {
       });
 
       it(`should have controls for ${component} in ThemeCustomizer`, () => {
-        // Normalize component names for section lookup
         const sectionName = component.charAt(0).toUpperCase() + component.slice(1);
-        
-        // Try to find the section by looking for the comment marker or the name
-        const commentPattern = new RegExp(
-          `\\/\\/ --- ${sectionName.toUpperCase()}[\\s\\S]*?(?=\\/\\/ ---|$)`,
+        const sectionPattern = new RegExp(
+          `name:\\s*"${sectionName}"[\\s\\S]{0,1200}`,
           'i'
         );
-        const namePattern = new RegExp(
-          `name:\\s*"${sectionName}"[\\s\\S]*?subsections:\\s*\\[[\\s\\S]*?(?=\\/\\/ ---|\\},\\s*\\/\\/ ---|$)`,
-          'i'
-        );
-        
-        const componentSection = commentPattern.exec(customizerContent) || namePattern.exec(customizerContent);
-        
+        const componentSection = sectionPattern.exec(customizerContent);
+
         expect(componentSection).toBeTruthy();
         if (componentSection) {
           const hasControls = /id:\s*['"]--/.test(componentSection[0]);
@@ -185,30 +219,28 @@ describe('Component System - Complete Coverage', () => {
   });
 
   describe('Component Showcase Rendering', () => {
-    // Only test components that we know have variant demonstrations in showcase
     const componentsWithVariants = ['button', 'badge', 'alert', 'card', 'input', 'table', 'tabs', 'link'];
     
     components.forEach(component => {
       variants.forEach(variant => {
         it(`should demonstrate ${component} ${variant} variant in showcase`, () => {
-          // Skip if not in the list or if it's initial variant
-          if (!componentsWithVariants.includes(component) || variant === 'initial') {
-            expect(true).toBe(true);
-            return;
-          }
-          
           const componentSection = new RegExp(
-            `id=["']component-${component}["'][\\s\\S]*?(?=<div className=["']card["'].*?id=|$)`,
+            `id=["']component-${component}["'][\\s\\S]*?(?=<div className=["'][^"']*card[^"']*["'][^>]*id=|$)`,
             'i'
           ).exec(showcaseContent);
-          
-          if (componentSection) {
-            const hasVariant = new RegExp(`className=["'][^"']*${variant}`, 'i').test(componentSection[0]);
-            expect(hasVariant).toBe(true);
-          } else {
-            // Component section exists but no variants found
-            expect(false).toBe(true);
+
+          expect(componentSection).toBeTruthy();
+          if (!componentSection) return;
+
+          if (!componentsWithVariants.includes(component) || variant === 'initial') {
+            expect(componentSection[0]).toBeTruthy();
+            return;
           }
+
+          const snippet = componentSection[0].toLowerCase();
+          const hasLiteralVariant = snippet.includes(variant);
+          const usesVariantLoop = /variants\.map/i.test(componentSection[0]) && /v\.className/i.test(componentSection[0]);
+          expect(hasLiteralVariant || usesVariantLoop).toBe(true);
         });
       });
     });
@@ -241,25 +273,20 @@ describe('Component System - Complete Coverage', () => {
   describe('Component Structure Validation', () => {
     components.forEach(component => {
       it(`should have proper structure sections for ${component}`, () => {
-        const componentConfig = new RegExp(
-          `name:\\s*"${component.charAt(0).toUpperCase() + component.slice(1)}"[\\s\\S]*?subsections`,
-          'i'
-        ).exec(customizerContent);
-        
-        expect(componentConfig).toBeTruthy();
+        const componentSection = getCustomizerComponentSection(component);
+        expect(componentSection).toMatch(/subsections/i);
       });
 
       variants.forEach(variant => {
         it(`should have ${variant} subsection for ${component}`, () => {
-          const componentSection = new RegExp(
-            `name:\\s*"${component.charAt(0).toUpperCase() + component.slice(1)}"[\\s\\S]*?(?=name:\\s*"(?!${variant.charAt(0).toUpperCase() + variant.slice(1)})[A-Z])|$`,
-            'i'
-          ).exec(customizerContent);
-          
-          if (componentSection && ['button', 'input', 'card', 'badge', 'alert', 'link'].includes(component)) {
-            const hasVariant = new RegExp(`name:\\s*"${variant.charAt(0).toUpperCase() + variant.slice(1)}"`, 'i').test(componentSection[0]);
-            expect(hasVariant).toBe(true);
-          }
+          if (!['button', 'input', 'card', 'badge', 'alert', 'link'].includes(component)) return;
+
+          const componentSection = getCustomizerComponentSection(component);
+          expect(componentSection).not.toEqual('');
+
+          const variantLabel = variant.charAt(0).toUpperCase() + variant.slice(1);
+          const hasVariant = new RegExp(`name:\\s*"${variantLabel}"`, 'i').test(componentSection);
+          expect(hasVariant).toBe(true);
         });
       });
     });

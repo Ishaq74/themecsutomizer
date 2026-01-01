@@ -7,6 +7,32 @@ describe('Input Component - Exhaustive Tests', () => {
   let customizerContent: string;
   let showcaseContent: string;
   let indexHtmlContent: string;
+  const getCustomizerSection = (component: string) => {
+    const anchor = `scrollToId: 'component-${component.toLowerCase()}'`;
+    const anchorIndex = customizerContent.indexOf(anchor);
+    if (anchorIndex === -1) return '';
+
+    let start = anchorIndex;
+    while (start > 0 && customizerContent[start] !== '{') {
+      start--;
+    }
+    if (customizerContent[start] !== '{') return '';
+
+    let depth = 0;
+    for (let i = start; i < customizerContent.length; i++) {
+      const char = customizerContent[i];
+      if (char === '{') {
+        depth++;
+      } else if (char === '}') {
+        depth--;
+        if (depth === 0) {
+          return customizerContent.slice(start, i + 1);
+        }
+      }
+    }
+
+    return customizerContent.slice(start);
+  };
 
   beforeAll(() => {
     useThemeContent = fs.readFileSync(path.join(process.cwd(), 'hooks/useTheme.ts'), 'utf8');
@@ -151,8 +177,9 @@ describe('Input Component - Exhaustive Tests', () => {
 
     ['Retro', 'Modern', 'Futuristic'].forEach(variant => {
       it(`should have ${variant} subsection`, () => {
-        const inputSection = customizerContent.match(/name:\s*["']Input["'][\s\S]*?(?=name:\s*["'][A-Z]|$)/i);
-        expect(inputSection![0]).toMatch(new RegExp(`name:\\s*["']${variant}["']`));
+        const inputSection = getCustomizerSection('input');
+        expect(inputSection).not.toEqual('');
+        expect(inputSection).toMatch(new RegExp(`name:\\s*["']${variant}["']`));
       });
     });
   });

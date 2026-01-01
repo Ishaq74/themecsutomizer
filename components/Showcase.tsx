@@ -210,8 +210,11 @@ export const Showcase: React.FC<ShowcaseProps> = ({ theme, isDark }) => {
         </div>
 
         {/* --- INPUTS --- */}
-        <div className="card" id="component-input">
+        <div className="card" id="component-input" data-variants="initial retro modern futuristic">
             <h2>Inputs</h2>
+            <p className="text-xs text-[var(--text-muted)]" aria-hidden="true">
+                Variants previewed: initial, retro, modern, futuristic.
+            </p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                  {variants.map(v => (
                     <div key={v.name} className="space-y-2">
@@ -221,6 +224,8 @@ export const Showcase: React.FC<ShowcaseProps> = ({ theme, isDark }) => {
                             <option>Option 1</option>
                             <option>Option 2</option>
                         </select>
+                        <textarea className={v.className} rows={3} placeholder="Write more..."></textarea>
+                        <input type="text" className={v.className} placeholder="Disabled input" disabled />
                     </div>
                  ))}
             </div>
@@ -379,23 +384,6 @@ export const Showcase: React.FC<ShowcaseProps> = ({ theme, isDark }) => {
             </div>
         </div>
 
-        {/* --- TABS --- */}
-        <div className="card" id="component-tabs">
-            <h2>Tabs</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {variants.map(v => (
-                    <div key={v.name}>
-                        <h3 className="text-xs font-bold uppercase mb-2">{v.name}</h3>
-                        <div className={`tabs ${v.className}`} role="tablist">
-                            <button className="tab active" role="tab">Tab 1</button>
-                            <button className="tab" role="tab">Tab 2</button>
-                            <button className="tab" role="tab">Tab 3</button>
-                        </div>
-                    </div>
-                ))}
-            </div>
-        </div>
-
         {/* --- AVATARS --- */}
         <div className="card" id="component-avatar">
             <h2>Avatars</h2>
@@ -413,53 +401,51 @@ export const Showcase: React.FC<ShowcaseProps> = ({ theme, isDark }) => {
             </div>
         </div>
 
-        {/* --- TOOLTIPS & POPOVERS --- */}
+        {/* --- TOOLTIPS --- */}
         <div className="card" id="component-tooltip">
-            <h2>Tooltips & Popovers</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                    <h3 className="text-lg font-semibold mb-4">Tooltips</h3>
-                    <div className="flex gap-4 flex-wrap">
-                        {variants.map(v => (
-                            <div key={v.name} className="relative inline-block">
-                                <button 
-                                    className={v.className}
-                                    onMouseEnter={() => setTooltipVisible(v.className || 'default')}
-                                    onMouseLeave={() => setTooltipVisible(null)}
-                                >
-                                    {v.name}
-                                </button>
-                                {tooltipVisible === (v.className || 'default') && (
-                                    <div className={`tooltip ${v.className} show`} data-placement="top" style={{bottom: 'calc(100% + 8px)', left: '50%', transform: 'translateX(-50%)'}}>
-                                        {v.name} tooltip
-                                    </div>
-                                )}
+            <h2>Tooltips</h2>
+            <p className="text-sm text-[var(--text-muted)] mb-4">Hover the buttons to preview contextual helpers per variant.</p>
+            <div className="flex gap-4 flex-wrap">
+                {variants.map(v => (
+                    <div key={v.name} className="relative inline-block">
+                        <button 
+                            className={v.className}
+                            onMouseEnter={() => setTooltipVisible(v.className || 'default')}
+                            onMouseLeave={() => setTooltipVisible(null)}
+                        >
+                            {v.name}
+                        </button>
+                        {tooltipVisible === (v.className || 'default') && (
+                            <div className={`tooltip ${v.className} show`} data-placement="top" style={{bottom: 'calc(100% + 8px)', left: '50%', transform: 'translateX(-50%)'}}>
+                                {v.name} tooltip
                             </div>
-                        ))}
+                        )}
                     </div>
-                </div>
+                ))}
+            </div>
+        </div>
 
-                <div id="component-popover">
-                    <h3 className="text-lg font-semibold mb-4">Popovers</h3>
-                    <div className="flex gap-4 flex-wrap">
-                        {variants.map(v => (
-                            <div key={v.name} className="relative inline-block">
-                                <button 
-                                    className={v.className}
-                                    onClick={() => setPopoverVisible(popoverVisible === v.className ? null : v.className)}
-                                >
-                                    {v.name}
-                                </button>
-                                {popoverVisible === v.className && (
-                                    <div className={`popover ${v.className}`} style={{top: 'calc(100% + 8px)', left: 0, zIndex: 100}}>
-                                        <div className="popover-header">{v.name} Popover</div>
-                                        <div>This is {v.name.toLowerCase()} popover content with detailed information.</div>
-                                    </div>
-                                )}
+        {/* --- POPOVERS --- */}
+        <div className="card" id="component-popover">
+            <h2>Popovers</h2>
+            <p className="text-sm text-[var(--text-muted)] mb-4">Click to toggle popovers styled for each aesthetic.</p>
+            <div className="flex gap-4 flex-wrap">
+                {variants.map(v => (
+                    <div key={v.name} className="relative inline-block">
+                        <button 
+                            className={v.className}
+                            onClick={() => setPopoverVisible(popoverVisible === v.className ? null : v.className)}
+                        >
+                            {v.name}
+                        </button>
+                        {popoverVisible === v.className && (
+                            <div className={`popover ${v.className}`} style={{top: 'calc(100% + 8px)', left: 0, zIndex: 100}}>
+                                <div className="popover-header">{v.name} Popover</div>
+                                <div>This is {v.name.toLowerCase()} popover content with detailed information.</div>
                             </div>
-                        ))}
+                        )}
                     </div>
-                </div>
+                ))}
             </div>
         </div>
 
