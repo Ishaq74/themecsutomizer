@@ -32,27 +32,47 @@ export const InputControl: React.FC<InputControlProps> = ({ config, value, isCha
         const allValues = [value, ...(options?.map(o => o.value) || [])];
         const uniqueValues = [...new Set(allValues)];
         
-        const tempEl = document.createElement('div');
-        tempEl.style.position = 'fixed';
-        tempEl.style.visibility = 'hidden';
-        document.body.appendChild(tempEl);
-
         const newResolvedColors: Record<string, string> = {};
+        const rootStyles = window.getComputedStyle(document.documentElement);
 
-        uniqueValues.forEach(cssVar => {
-            if (!cssVar) return;
+        uniqueValues.forEach(cssValue => {
+            if (!cssValue) return;
+            
             try {
-                tempEl.style.color = cssVar;
-                newResolvedColors[cssVar] = window.getComputedStyle(tempEl).color;
+                // Check if it's a CSS variable
+                if (cssValue.startsWith('var(--')) {
+                    // Extract variable name: var(--color-primary) -> --color-primary
+                    const varName = cssValue.match(/var\((--[^)]+)\)/)?.[1];
+                    if (varName) {
+                        // Get the value from root element
+                        const resolvedValue = rootStyles.getPropertyValue(varName).trim();
+                        
+                        // If the resolved value is also a var(), resolve it recursively
+                        if (resolvedValue.startsWith('var(')) {
+                            const nestedVarName = resolvedValue.match(/var\((--[^)]+)\)/)?.[1];
+                            if (nestedVarName) {
+                                const nestedValue = rootStyles.getPropertyValue(nestedVarName).trim();
+                                newResolvedColors[cssValue] = nestedValue || resolvedValue;
+                            } else {
+                                newResolvedColors[cssValue] = resolvedValue;
+                            }
+                        } else {
+                            newResolvedColors[cssValue] = resolvedValue || cssValue;
+                        }
+                    } else {
+                        newResolvedColors[cssValue] = cssValue;
+                    }
+                } else {
+                    // It's a direct color value (hex, rgb, named color, etc.)
+                    newResolvedColors[cssValue] = cssValue;
+                }
             } catch (e) {
-                console.warn(`Could not compute style for: ${cssVar}`, e);
-                newResolvedColors[cssVar] = 'transparent';
+                console.warn(`Could not resolve color: ${cssValue}`, e);
+                newResolvedColors[cssValue] = '#999999';
             }
         });
-
-        document.body.removeChild(tempEl);
         
-        setResolvedColors(prev => ({...prev, ...newResolvedColors}));
+        setResolvedColors(newResolvedColors);
     }, [value, options, purpose, theme]);
 
     // Effect to handle clicks outside the custom dropdown

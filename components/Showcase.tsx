@@ -13,6 +13,9 @@ interface ShowcaseProps {
 export const Showcase: React.FC<ShowcaseProps> = ({ theme, isDark }) => {
   const [toasts, setToasts] = useState<{id: number, message: string, status: 'success' | 'danger'}[]>([]);
   const [playgroundText, setPlaygroundText] = useState('The quick brown fox jumps over the lazy dog.');
+  const [tooltipVisible, setTooltipVisible] = useState<string | null>(null);
+  const [popoverVisible, setPopoverVisible] = useState<string | null>(null);
+  const [toastVariant, setToastVariant] = useState<string>('');
   
   // Refs for contrast
   const h1Ref = useRef<HTMLHeadingElement>(null);
@@ -26,6 +29,24 @@ export const Showcase: React.FC<ShowcaseProps> = ({ theme, isDark }) => {
   
   const dismissToast = (id: number) => {
     setToasts(t => t.filter(toast => toast.id !== id));
+  };
+
+  const showDemoToast = (variant: string = '') => {
+    const container = document.getElementById('toast-viewport');
+    if (!container) return;
+    
+    const toast = document.createElement('div');
+    toast.className = `toast ${variant}`.trim();
+    toast.innerHTML = `
+      <span>✓</span>
+      <span>${variant || 'Default'} toast notification!</span>
+    `;
+    container.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.style.animation = 'toast-slide-in 0.3s ease-out reverse';
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
   };
 
   const variants = [
@@ -72,21 +93,42 @@ export const Showcase: React.FC<ShowcaseProps> = ({ theme, isDark }) => {
                         <span className="text-[var(--text-muted)] w-16 text-xs font-mono">H3</span>
                         <h3>Heading 3</h3>
                     </div>
-                </div>
-                <div className="bg-[var(--bg-inset)] p-4 rounded-lg border border-[var(--border-default)]">
-                    <label className="text-xs font-bold text-[var(--text-muted)] uppercase mb-2 block">Playground</label>
-                    <input 
-                        type="text" 
-                        value={playgroundText} 
-                        onChange={(e) => setPlaygroundText(e.target.value)} 
-                        className="w-full bg-[var(--bg-default)] border border-[var(--input-border-color)] p-2 rounded text-[var(--text-default)] mb-4"
-                    />
-                    <div className="space-y-2">
-                        <p className="text-2xl font-bold" style={{ fontFamily: 'var(--font-family-display)' }}>{playgroundText}</p>
-                        <p className="text-base" style={{ fontFamily: 'var(--font-family-sans)' }}>{playgroundText}</p>
-                        <p className="text-sm" style={{ fontFamily: 'var(--font-family-mono)' }}>{playgroundText}</p>
+                    <div className="flex items-baseline gap-4 border-b border-[var(--border-default)] pb-2">
+                        <span className="text-[var(--text-muted)] w-16 text-xs font-mono">Link</span>
+                        <a href="#">Sample Link</a>
                     </div>
                 </div>
+                <div className="bg-[var(--bg-inset)] p-4 rounded-lg border border-[var(--border-default)]">
+                    <label className="text-xs font-bold text-[var(--text-muted)] uppercase mb-2 block">Font Families</label>
+                    <div className="space-y-3">
+                        <div>
+                            <div className="text-xs text-[var(--text-muted)] mb-1">Display Font</div>
+                            <p className="text-2xl font-bold" style={{ fontFamily: 'var(--font-family-display)' }}>The quick brown fox</p>
+                        </div>
+                        <div>
+                            <div className="text-xs text-[var(--text-muted)] mb-1">Sans-serif Font</div>
+                            <p className="text-base" style={{ fontFamily: 'var(--font-family-sans)' }}>The quick brown fox jumps</p>
+                        </div>
+                        <div>
+                            <div className="text-xs text-[var(--text-muted)] mb-1">Monospace Font</div>
+                            <p className="text-sm" style={{ fontFamily: 'var(--font-family-mono)' }}>console.log('Hello');</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {/* --- GRID SYSTEM --- */}
+        <div className="card" id="component-grid">
+            <h2>Grid System</h2>
+            <p className="text-sm text-[var(--text-muted)] mb-4">Responsive grid with customizable gap and column width.</p>
+            <div className="grid-system">
+                <div className="grid-item">Grid Item 1</div>
+                <div className="grid-item">Grid Item 2</div>
+                <div className="grid-item">Grid Item 3</div>
+                <div className="grid-item">Grid Item 4</div>
+                <div className="grid-item">Grid Item 5</div>
+                <div className="grid-item">Grid Item 6</div>
             </div>
         </div>
         
@@ -114,6 +156,56 @@ export const Showcase: React.FC<ShowcaseProps> = ({ theme, isDark }) => {
                         ))}
                     </tbody>
                 </table>
+            </div>
+        </div>
+
+        {/* --- LINKS --- */}
+        <div className="card" id="component-link">
+            <h2>Links</h2>
+            
+            <div className="mb-8">
+                <h3 className="text-lg font-semibold mb-4">Text Links - All Variants</h3>
+                <div className="space-y-4">
+                    <div>
+                        <strong>Default:</strong> This is a paragraph with <a href="#">a standard link</a> inside it.
+                    </div>
+                    <div>
+                        <strong>Retro:</strong> This is a paragraph with <a href="#" className="link-retro">a retro link</a> inside it.
+                    </div>
+                    <div>
+                        <strong>Modern:</strong> This is a paragraph with <a href="#" className="link-modern">a modern link</a> inside it.
+                    </div>
+                    <div>
+                        <strong>Futuristic:</strong> This is a paragraph with <a href="#" className="link-futuristic">a futuristic link</a> inside it.
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 className="text-lg font-semibold mb-4">Links Styled as Buttons</h3>
+                <p className="text-sm text-[var(--text-muted)] mb-4">Links can use the same classes as buttons for consistency.</p>
+                <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse">
+                        <thead>
+                            <tr className="border-b border-[var(--border-default)]">
+                                <th className="py-2 text-[var(--text-muted)] font-normal">Variant</th>
+                                <th className="py-2 text-[var(--text-muted)] font-normal">Primary</th>
+                                <th className="py-2 text-[var(--text-muted)] font-normal">Secondary</th>
+                                <th className="py-2 text-[var(--text-muted)] font-normal">Accent</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-[var(--border-default)]">
+                            {variants.map(v => (
+                                <tr key={v.name}>
+                                    <td className="py-4 font-medium text-sm pr-4">{v.name}</td>
+                                    <td className="py-4 pr-4"><a href="#" className={`button ${v.className} primary`}>Primary Link</a></td>
+                                    <td className="py-4 pr-4"><a href="#" className={`button ${v.className} secondary`}>Secondary Link</a></td>
+                                    <td className="py-4 pr-4"><a href="#" className={`button ${v.className} accent`}>Accent Link</a></td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -283,6 +375,105 @@ export const Showcase: React.FC<ShowcaseProps> = ({ theme, isDark }) => {
                             <span className="breadcrumb-item active">Data</span>
                         </nav>
                     </div>
+                ))}
+            </div>
+        </div>
+
+        {/* --- AVATARS --- */}
+        <div className="card" id="component-avatar">
+            <h2>Avatars</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {variants.map(v => (
+                    <div key={v.name}>
+                        <h3 className="text-xs font-bold uppercase mb-2">{v.name}</h3>
+                        <div className="flex gap-2">
+                            <div className={`avatar ${v.className}`}>JD</div>
+                            <div className={`avatar ${v.className}`}>AB</div>
+                            <div className={`avatar ${v.className}`}>XY</div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+
+        {/* --- TOOLTIPS & POPOVERS --- */}
+        <div className="card" id="component-tooltip">
+            <h2>Tooltips & Popovers</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h3 className="text-lg font-semibold mb-4">Tooltips</h3>
+                    <div className="flex gap-4 flex-wrap">
+                        {variants.map(v => (
+                            <div key={v.name} className="relative inline-block">
+                                <button 
+                                    className={v.className}
+                                    onMouseEnter={() => setTooltipVisible(v.className || 'default')}
+                                    onMouseLeave={() => setTooltipVisible(null)}
+                                >
+                                    {v.name}
+                                </button>
+                                {tooltipVisible === (v.className || 'default') && (
+                                    <div className={`tooltip ${v.className} show`} data-placement="top" style={{bottom: 'calc(100% + 8px)', left: '50%', transform: 'translateX(-50%)'}}>
+                                        {v.name} tooltip
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                <div>
+                    <h3 className="text-lg font-semibold mb-4">Popovers</h3>
+                    <div className="flex gap-4 flex-wrap">
+                        {variants.map(v => (
+                            <div key={v.name} className="relative inline-block">
+                                <button 
+                                    className={v.className}
+                                    onClick={() => setPopoverVisible(popoverVisible === v.className ? null : v.className)}
+                                >
+                                    {v.name}
+                                </button>
+                                {popoverVisible === v.className && (
+                                    <div className={`popover ${v.className}`} style={{top: 'calc(100% + 8px)', left: 0, zIndex: 100}}>
+                                        <div className="popover-header">{v.name} Popover</div>
+                                        <div>This is {v.name.toLowerCase()} popover content with detailed information.</div>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {/* --- SKELETONS --- */}
+        <div className="card" id="component-skeleton">
+            <h2>Skeleton Loaders</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {variants.map(v => (
+                    <div key={v.name}>
+                        <h3 className="text-xs font-bold uppercase mb-3">{v.name}</h3>
+                        <div className={`skeleton ${v.className}`} style={{height: '100px', width: '100%'}}></div>
+                        <div className={`skeleton ${v.className} mt-2`} style={{height: '20px', width: '80%'}}></div>
+                        <div className={`skeleton ${v.className} mt-2`} style={{height: '20px', width: '60%'}}></div>
+                    </div>
+                ))}
+            </div>
+        </div>
+
+        {/* --- TOAST DEMO --- */}
+        <div className="card" id="component-toast">
+            <h2>Toast Notifications</h2>
+            <p className="text-sm text-[var(--text-muted)] mb-4">Click buttons to see toast notifications with different styles.</p>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                {variants.map(v => (
+                    <button 
+                        key={v.name}
+                        onClick={() => showDemoToast(v.className)} 
+                        className={`${v.className} primary`}
+                    >
+                        {v.name} Toast
+                    </button>
                 ))}
             </div>
         </div>

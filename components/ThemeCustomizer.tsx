@@ -95,6 +95,66 @@ const themeConfig: ThemeConfigCategory[] = [
       }
     ]
   },
+  // --- TYPOGRAPHY ---
+  {
+      name: "Typography",
+      id: 'typography',
+      scrollToId: 'component-typography',
+      subsections: [
+          {
+              name: "Sizing",
+              configs: [
+                  { id: '--font-size-base', label: 'Base Size', type: 'range', min: 0.875, max: 1.25, step: 0.0625, unit: 'rem' },
+                  { id: '--line-height-base', label: 'Line Height', type: 'range', min: 1.2, max: 2, step: 0.1 },
+                  { id: '--h1-font-size', label: 'H1 Size', type: 'range', min: 2, max: 4, step: 0.25, unit: 'rem' },
+                  { id: '--h2-font-size', label: 'H2 Size', type: 'range', min: 1.5, max: 3, step: 0.25, unit: 'rem' },
+                  { id: '--h3-font-size', label: 'H3 Size', type: 'range', min: 1.25, max: 2.5, step: 0.125, unit: 'rem' },
+              ]
+          },
+          {
+              name: "Colors",
+              configs: [
+                  { id: '--heading-color', label: 'Headings', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                  { id: '--link-color', label: 'Links', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+              ]
+          }
+      ]
+  },
+  // --- DESIGN TOKENS ---
+  {
+      name: "Design Tokens",
+      id: 'tokens',
+      subsections: [
+          {
+              name: "Spacing",
+              configs: [
+                  { id: '--space-1', label: 'Space 1 (XS)', type: 'text' },
+                  { id: '--space-2', label: 'Space 2 (S)', type: 'text' },
+                  { id: '--space-3', label: 'Space 3 (M)', type: 'text' },
+                  { id: '--space-4', label: 'Space 4 (Base)', type: 'text' },
+                  { id: '--space-6', label: 'Space 6 (L)', type: 'text' },
+                  { id: '--space-8', label: 'Space 8 (XL)', type: 'text' },
+              ]
+          },
+          {
+              name: "Border Radius",
+              configs: [
+                  { id: '--border-radius-sm', label: 'Small', type: 'text' },
+                  { id: '--border-radius-md', label: 'Medium', type: 'text' },
+                  { id: '--border-radius-lg', label: 'Large', type: 'text' },
+              ]
+          },
+          {
+              name: "Shadows",
+              configs: [
+                  { id: '--shadow-sm', label: 'Small', type: 'text' },
+                  { id: '--shadow-md', label: 'Medium', type: 'text' },
+                  { id: '--shadow-lg', label: 'Large', type: 'text' },
+                  { id: '--shadow-xl', label: 'Extra Large', type: 'text' },
+              ]
+          }
+      ]
+  },
   // --- LAYOUT ---
   {
       name: "Layout",
@@ -262,6 +322,235 @@ const themeConfig: ThemeConfigCategory[] = [
               ]
           }
       ]
+  },
+  // --- LINK COMPONENT ---
+  {
+    name: "Link",
+    id: 'link',
+    scrollToId: 'component-link',
+    subsections: [
+        // ===== LINK STYLES (Text Links) =====
+        {
+            name: "Link Styles",
+            subsections: [
+                {
+                    name: "Initial",
+                    subsections: [
+                        {
+                            name: "Structure",
+                            configs: [
+                                { id: '--link-text-decoration', label: 'Text Decoration', type: 'select', options: [{value: 'none', label: 'None'}, {value: 'underline', label: 'Underline'}, {value: 'overline', label: 'Overline'}] },
+                                { id: '--link-text-decoration-color', label: 'Decoration Color', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                                { id: '--link-text-underline-offset', label: 'Underline Offset', type: 'range', min: 0, max: 8, unit: 'px' },
+                                { id: '--link-font-weight', label: 'Font Weight', type: 'select', options: [{value: '400', label: 'Normal'}, {value: '500', label: 'Medium'}, {value: '600', label: 'Semibold'}, {value: '700', label: 'Bold'}] },
+                                { id: '--link-transition', label: 'Transition', type: 'text' }
+                            ]
+                        },
+                        {
+                            name: "Colors",
+                            configs: [
+                                { id: '--link-color', label: 'Link Color', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                                { id: '--link-hover-color', label: 'Hover Color', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                                { id: '--link-active-color', label: 'Active Color', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                                { id: '--link-visited-color', label: 'Visited Color', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "Retro",
+                    subsections: [
+                        {
+                            name: "Structure",
+                            configs: [
+                                { id: '--retro-link-border-width', label: 'Border Width', type: 'range', min: 1, max: 4, unit: 'px' },
+                                { id: '--retro-link-font-weight', label: 'Font Weight', type: 'select', options: [{value: '400', label: 'Normal'}, {value: '500', label: 'Medium'}, {value: '600', label: 'Semibold'}, {value: '700', label: 'Bold'}] },
+                                { id: '--retro-link-transition', label: 'Transition', type: 'text' },
+                                { id: '--retro-link-shadow-offset', label: 'Shadow Offset', type: 'range', min: 0, max: 8, unit: 'px' }
+                            ]
+                        },
+                        {
+                            name: "Colors",
+                            configs: [
+                                { id: '--retro-link-color', label: 'Link Color', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                                { id: '--retro-link-border-color', label: 'Border Color', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                                { id: '--retro-link-shadow-color', label: 'Shadow Color', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+                            ]
+                        },
+                        {
+                            name: "States",
+                            configs: [
+                                { id: '--retro-link-hover-color', label: 'Hover Color', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "Modern",
+                    subsections: [
+                        {
+                            name: "Structure",
+                            configs: [
+                                { id: '--modern-link-underline-height', label: 'Underline Height', type: 'range', min: 1, max: 4, unit: 'px' },
+                                { id: '--modern-link-transition', label: 'Transition', type: 'text' }
+                            ]
+                        },
+                        {
+                            name: "Colors",
+                            configs: [
+                                { id: '--modern-link-color', label: 'Link Color', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                                { id: '--modern-link-underline-color', label: 'Underline Color', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+                            ]
+                        },
+                        {
+                            name: "States",
+                            configs: [
+                                { id: '--modern-link-hover-color', label: 'Hover Color', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "Futuristic",
+                    subsections: [
+                        {
+                            name: "Structure",
+                            configs: [
+                                { id: '--futuristic-link-letter-spacing', label: 'Letter Spacing', type: 'text' },
+                                { id: '--futuristic-link-font-size', label: 'Font Size', type: 'text' }
+                            ]
+                        },
+                        {
+                            name: "Colors",
+                            configs: [
+                                { id: '--futuristic-link-color', label: 'Link Color', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                                { id: '--futuristic-link-glow', label: 'Hover Glow', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+                            ]
+                        },
+                        {
+                            name: "States",
+                            configs: [
+                                { id: '--futuristic-link-hover-color', label: 'Hover Color', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        // ===== BUTTON STYLES (Links as Buttons) =====
+        {
+            name: "Button Styles",
+            subsections: [
+                {
+                    name: "Initial",
+                    subsections: [
+                        {
+                            name: "Structure",
+                            configs: [
+                                { id: '--link-button-padding-y', label: 'Padding Y', type: 'select', options: [ { value: 'var(--space-1)', label: 'Small'}, { value: 'var(--space-2)', label: 'Medium'}, { value: 'var(--space-3)', label: 'Large'}] },
+                                { id: '--link-button-padding-x', label: 'Padding X', type: 'select', options: [ { value: 'var(--space-2)', label: 'Small'}, { value: 'var(--space-4)', label: 'Medium'}, { value: 'var(--space-6)', label: 'Large'}] },
+                                { id: '--link-button-font-size', label: 'Font Size', type: 'range', min: 0.75, max: 1.25, step: 0.0625, unit: 'rem' },
+                                { id: '--link-button-border-radius', label: 'Radius', type: 'select', options: [{value: 'var(--border-radius-sm)', label: 'Small'}, {value: 'var(--border-radius-md)', label: 'Medium'}, {value: '999px', label: 'Pill'}] },
+                                { id: '--link-button-border-width', label: 'Border Width', type: 'text' }
+                            ]
+                        },
+                        {
+                            name: "Colors",
+                            configs: [
+                                { id: '--link-button-default-bg', label: 'Default BG', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                                { id: '--link-button-default-color', label: 'Default Text', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                                { id: '--link-button-default-border-color', label: 'Default Border', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+                            ]
+                        },
+                        {
+                            name: "States",
+                            configs: [
+                                { id: '--link-button-default-bg-hover', label: 'Hover BG', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "Retro",
+                    subsections: [
+                        {
+                            name: "Structure",
+                            configs: [
+                                { id: '--retro-link-button-border-width', label: 'Border Width', type: 'range', min: 1, max: 6, unit: 'px' },
+                                { id: '--retro-link-button-shadow-offset', label: 'Shadow Depth', type: 'range', min: 0, max: 10, unit: 'px' }
+                            ]
+                        },
+                        {
+                            name: "Colors",
+                            configs: [
+                                { id: '--retro-link-button-bg', label: 'Background', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                                { id: '--retro-link-button-color', label: 'Text', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                                { id: '--retro-link-button-border-color', label: 'Border', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                                { id: '--retro-link-button-shadow-color', label: 'Shadow', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+                            ]
+                        },
+                        {
+                            name: "States",
+                            configs: [
+                                { id: '--retro-link-button-hover-bg', label: 'Hover BG', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "Modern",
+                    subsections: [
+                        {
+                            name: "Structure",
+                            configs: [
+                                { id: '--modern-link-button-radius', label: 'Radius', type: 'select', options: [{value: 'var(--border-radius-md)', label: 'Medium'}, {value: '9999px', label: 'Pill'}] }
+                            ]
+                        },
+                        {
+                            name: "Colors",
+                            configs: [
+                                { id: '--modern-link-button-bg', label: 'Background', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                                { id: '--modern-link-button-color', label: 'Text', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                                { id: '--modern-link-button-border-color', label: 'Border', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+                            ]
+                        },
+                        {
+                            name: "States",
+                            configs: [
+                                { id: '--modern-link-button-hover-shadow', label: 'Hover Shadow', type: 'text' }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    name: "Futuristic",
+                    subsections: [
+                        {
+                            name: "Structure",
+                            configs: [
+                                { id: '--futuristic-link-button-clip-path', label: 'Clip Path', type: 'text' }
+                            ]
+                        },
+                        {
+                            name: "Colors",
+                            configs: [
+                                { id: '--futuristic-link-button-bg', label: 'Background', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                                { id: '--futuristic-link-button-color', label: 'Text', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                                { id: '--futuristic-link-button-border-color', label: 'Border', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+                            ]
+                        },
+                        {
+                            name: "States",
+                            configs: [
+                                { id: '--futuristic-link-button-hover-bg', label: 'Hover BG', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                                { id: '--futuristic-link-button-hover-glow', label: 'Hover Glow', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
   },
   // --- CARD COMPONENT ---
   {
@@ -463,8 +752,16 @@ const themeConfig: ThemeConfigCategory[] = [
                   { 
                       name: "Initial", 
                       subsections: [
-                          { name: "Structure", configs: [{ id: '--avatar-size', label: 'Size', type: 'text' }, { id: '--avatar-border-radius', label: 'Radius', type: 'text' }] },
-                          { name: "Colors", configs: [{ id: '--avatar-bg', label: 'Background', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }, { id: '--avatar-color', label: 'Text', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }] },
+                          { name: "Structure", configs: [
+                              { id: '--avatar-size', label: 'Size', type: 'text' }, 
+                              { id: '--avatar-border-radius', label: 'Radius', type: 'text' },
+                              { id: '--avatar-border-width', label: 'Border Width', type: 'text' }
+                          ] },
+                          { name: "Colors", configs: [
+                              { id: '--avatar-bg', label: 'Background', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }, 
+                              { id: '--avatar-color', label: 'Text', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                              { id: '--avatar-border-color', label: 'Border Color', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+                          ] },
                           { name: "States", configs: [] }
                       ]
                   },
@@ -543,14 +840,23 @@ const themeConfig: ThemeConfigCategory[] = [
             { 
                 name: "Initial", 
                 subsections: [
-                    { name: "Structure", configs: [{ id: '--toast-border-radius', label: 'Radius', type: 'text' }] },
-                    { name: "Colors", configs: [{ id: '--toast-bg', label: 'BG', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }, { id: '--toast-color', label: 'Text', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }] },
+                    { name: "Structure", configs: [
+                        { id: '--toast-padding', label: 'Padding', type: 'text' },
+                        { id: '--toast-border-radius', label: 'Radius', type: 'text' }
+                    ] },
+                    { name: "Colors", configs: [
+                        { id: '--toast-bg', label: 'BG', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }, 
+                        { id: '--toast-color', label: 'Text', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                        { id: '--toast-border-color', label: 'Border', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+                    ] },
                     { name: "States", configs: [] }
                 ]
             },
             { name: "Retro", subsections: [ { name: "Structure", configs: [] }, { name: "Colors", configs: [{ id: '--retro-toast-border-color', label: 'Border', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }] }, { name: "States", configs: [] } ] },
             { name: "Modern", subsections: [ { name: "Structure", configs: [{ id: '--modern-toast-radius', label: 'Radius', type: 'text' }] }, { name: "Colors", configs: [] }, { name: "States", configs: [] } ] },
-            { name: "Futuristic", subsections: [ { name: "Structure", configs: [] }, { name: "Colors", configs: [{ id: '--futuristic-toast-bg', label: 'Glass BG', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }] }, { name: "States", configs: [] } ] }
+            { name: "Futuristic", subsections: [ { name: "Structure", configs: [] }, { name: "Colors", configs: [] }, { name: "States", configs: [
+                { id: '--futuristic-toast-glow', label: 'Glow', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+            ] } ] }
         ]
       },
       {
@@ -560,13 +866,21 @@ const themeConfig: ThemeConfigCategory[] = [
                 name: "Initial", 
                 subsections: [
                     { name: "Structure", configs: [{ id: '--popover-padding', label: 'Padding', type: 'text' }, { id: '--popover-border-radius', label: 'Radius', type: 'text' }] },
-                    { name: "Colors", configs: [{ id: '--popover-bg', label: 'BG', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }, { id: '--popover-border-color', label: 'Border', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }, { id: '--popover-item-color', label: 'Item Text', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }, { id: '--popover-item-hover-bg', label: 'Item Hover BG', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }] },
+                    { name: "Colors", configs: [
+                        { id: '--popover-bg', label: 'BG', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                        { id: '--popover-color', label: 'Text', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                        { id: '--popover-border-color', label: 'Border', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }, 
+                        { id: '--popover-item-color', label: 'Item Text', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }, 
+                        { id: '--popover-item-hover-bg', label: 'Item Hover BG', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+                    ] },
                     { name: "States", configs: [] }
                 ]
             },
-            { name: "Retro", subsections: [ { name: "Structure", configs: [] }, { name: "Colors", configs: [{ id: '--popover-border-color', label: 'Border', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }] }, { name: "States", configs: [] } ] },
+            { name: "Retro", subsections: [ { name: "Structure", configs: [] }, { name: "Colors", configs: [] }, { name: "States", configs: [] } ] },
             { name: "Modern", subsections: [ { name: "Structure", configs: [{ id: '--popover-shadow', label: 'Shadow', type: 'text' }] }, { name: "Colors", configs: [] }, { name: "States", configs: [] } ] },
-            { name: "Futuristic", subsections: [ { name: "Structure", configs: [] }, { name: "Colors", configs: [{ id: '--popover-bg', label: 'Glass BG', type: 'text' }] }, { name: "States", configs: [] } ] }
+            { name: "Futuristic", subsections: [ { name: "Structure", configs: [] }, { name: "Colors", configs: [] }, { name: "States", configs: [
+                { id: '--futuristic-popover-glow', label: 'Glow', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+            ] } ] }
         ]
       },
       {
@@ -575,11 +889,24 @@ const themeConfig: ThemeConfigCategory[] = [
               { 
                   name: "Initial", 
                   subsections: [
-                      { name: "Structure", configs: [{ id: '--tooltip-padding-y', label: 'Padding Y', type: 'text' }, { id: '--tooltip-border-radius', label: 'Radius', type: 'text' }] },
-                      { name: "Colors", configs: [{ id: '--tooltip-bg', label: 'BG', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }, { id: '--tooltip-color', label: 'Text', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }] },
+                      { name: "Structure", configs: [
+                          { id: '--tooltip-padding-y', label: 'Padding Y', type: 'text' },
+                          { id: '--tooltip-padding-x', label: 'Padding X', type: 'text' },
+                          { id: '--tooltip-font-size', label: 'Font Size', type: 'range', min: 0.75, max: 1, step: 0.0625, unit: 'rem' },
+                          { id: '--tooltip-border-radius', label: 'Radius', type: 'text' }
+                      ] },
+                      { name: "Colors", configs: [
+                          { id: '--tooltip-bg', label: 'BG', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }, 
+                          { id: '--tooltip-color', label: 'Text', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+                      ] },
                       { name: "States", configs: [] }
                   ]
-              }
+              },
+              { name: "Retro", subsections: [ { name: "Structure", configs: [] }, { name: "Colors", configs: [] }, { name: "States", configs: [] } ] },
+              { name: "Modern", subsections: [ { name: "Structure", configs: [] }, { name: "Colors", configs: [] }, { name: "States", configs: [] } ] },
+              { name: "Futuristic", subsections: [ { name: "Structure", configs: [] }, { name: "Colors", configs: [] }, { name: "States", configs: [
+                  { id: '--futuristic-tooltip-glow', label: 'Glow', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+              ] } ] }
           ]
       }
     ]
@@ -601,7 +928,9 @@ const themeConfig: ThemeConfigCategory[] = [
           {
               name: "Skeleton",
               configs: [
-                  { id: '--skeleton-bg', label: 'Pulse Color', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
+                  { id: '--skeleton-bg', label: 'Background', type: 'select', options: semanticColorTokenOptions, purpose: 'color' },
+                  { id: '--skeleton-border-radius', label: 'Border Radius', type: 'text' },
+                  { id: '--skeleton-shimmer-color', label: 'Shimmer Color', type: 'select', options: semanticColorTokenOptions, purpose: 'color' }
               ]
           },
           {
